@@ -83,7 +83,7 @@
   },
   "dependencies": {
     "@-xun/cli": "^2.0.4",
-    "core-js": "^3.42.0",
+    "core-js": "^3.44.0",
     "env-paths": "^3.0.0",
     "rejoinder": "^1.2.5",
     "rejoinder-listr2": "^1.0.3",
