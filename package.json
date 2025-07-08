@@ -82,7 +82,7 @@
     "test:packages:all:unit": "symbiote test --env NODE_NO_WARNINGS=1 --tests unit type --scope unlimited --coverage"
   },
   "dependencies": {
-    "@-xun/cli": "^2.0.3",
+    "@-xun/cli": "^2.0.4",
     "core-js": "^3.42.0",
     "env-paths": "^3.0.0",
     "rejoinder": "^1.2.5",
