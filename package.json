@@ -90,7 +90,7 @@
     "type-fest": "^4.41.0"
   },
   "devDependencies": {
-    "@-xun/fs": "^1.0.0",
+    "@-xun/fs": "^2.0.0",
     "@-xun/symbiote": "^4.1.0"
   },
   "engines": {
