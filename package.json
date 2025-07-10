@@ -85,7 +85,7 @@
     "@-xun/cli": "^2.0.7",
     "core-js": "^3.44.0",
     "env-paths": "^3.0.0",
-    "rejoinder": "^2.0.1",
+    "rejoinder": "^2.0.2",
     "rejoinder-listr2": "^2.0.1",
     "type-fest": "^4.41.0"
   },
