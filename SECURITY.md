@@ -8,10 +8,10 @@ disclosure through GitHub][5] or, if that fails, [via email][6].
 
 Thank you for your contribution!
 
-[1]: https://snyk.io/test/github/nhscc/bdpa-cron
-[2]: https://snyk.io/test/github/nhscc/bdpa-cron/badge.svg
-[3]: https://github.com/nhscc/bdpa-cron/issues?q=
-[4]: https://github.com/nhscc/bdpa-cron/issues/new/choose
+[1]: https://snyk.io/test/github/nhscc/bdpa-cli
+[2]: https://snyk.io/test/github/nhscc/bdpa-cli/badge.svg
+[3]: https://github.com/nhscc/bdpa-cli/issues?q=
+[4]: https://github.com/nhscc/bdpa-cli/issues/new/choose
 [5]:
   https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability#privately-reporting-a-security-vulnerability
 [6]:

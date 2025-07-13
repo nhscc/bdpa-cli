@@ -1,8 +1,8 @@
-[**@nhscc/bdpa-cron**](../../../README.md)
+[**@nhscc/bdpa-cli**](../../../README.md)
 
 ***
 
-[@nhscc/bdpa-cron](../../../README.md) / [test/util](../README.md) / NpmLinkPackageFixtureOptions
+[@nhscc/bdpa-cli](../../../README.md) / [test/util](../README.md) / NpmLinkPackageFixtureOptions
 
 # Type Alias: NpmLinkPackageFixtureOptions
 

@@ -14,7 +14,7 @@ import {
 const { exports: packageExports, name: packageName } = packageJson;
 
 const TEST_IDENTIFIER = `${packageName.split('/').at(-1)!}-smoke`;
-const debug = createDebugLogger({ namespace: 'bdpa-cron' }).extend(TEST_IDENTIFIER);
+const debug = createDebugLogger({ namespace: 'bdpa-cli' }).extend(TEST_IDENTIFIER);
 const nodeVersion = process.env.XPIPE_MATRIX_NODE_VERSION || process.version;
 
 debug(`nodeVersion: "${nodeVersion}" (process.version=${process.version})`);

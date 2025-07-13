@@ -3,7 +3,7 @@
 import { createDebugLogger, createGenericLogger } from 'rejoinder';
 
 import { configureExecutionContext } from 'universe:configure.ts';
-import { TargetProblem } from 'universe:constant.ts';
+import { ActualTargetProblem, Task } from 'universe:constant.ts';
 import runBanHammer from 'universe:tasks/ban-hammer.ts';
 
 import type { ExecutionContext } from '@-xun/cli';
@@ -23,14 +23,23 @@ function makeDummyContext() {
   } as TaskRunnerContext;
 }
 
-it('runs in a test that needs a better title', async () => {
-  expect.hasAssertions();
-
+async function makeGetConfig() {
   const { getConfig } = await configureExecutionContext({
     state: {}
   } as ExecutionContext);
 
-  //await runBanHammer(TargetProblem.Airports, getConfig, makeDummyContext());
+  return getConfig;
+}
+
+it('runs in a test that needs a better title', async () => {
+  expect.hasAssertions();
+
+  // await runBanHammer(
+  //   Task.BanHammer,
+  //   TargetProblem.Airports,
+  //   await makeGetConfig(),
+  //   makeDummyContext()
+  // );
 });
 
 // import { mockDateNowMs, useMockDateNow } from 'multiverse/mongo-common';

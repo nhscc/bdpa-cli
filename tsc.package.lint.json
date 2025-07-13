@@ -12,12 +12,17 @@
   "include": ["**/*", "**/.*/**/*", "**/.*"],
   "exclude": [
     "**/dist/**/*",
+    "**/.next/**/*",
+    "**/.wrangler/**/*",
     "**/test/fixtures/**/*",
     "**/node_modules/**/*",
     "packages/**/*",
     "packages/**/.*",
     "**/*.ignore",
-    "**/*.ignore.*/**/*",
-    "**/ignore.*"
+    "**/*.ignore/**/*",
+    "**/ignore.*",
+    "**/ignore.*/**/*",
+    "**/*.ignore.*",
+    "**/*.ignore.*/**/*"
   ]
 }

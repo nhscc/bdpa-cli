@@ -12,16 +12,26 @@ const { createDebugLogger } = require('rejoinder');
 
 const debug = createDebugLogger({ namespace: 'symbiote:config:babel' });
 
-module.exports = deepMergeConfig(
+const config = deepMergeConfig(
   moduleExport({
     derivedAliases: getBabelAliases(),
     ...assertEnvironment({ projectRoot: __dirname })
   }),
   {
     // Any custom configs here will be deep merged with moduleExport's result
+    //
+    // You may wish to enable explicit exports references for improved testing
+    // DX, but be aware that it is currently a wee buggy as of 5/2025 (fix it!)
+    //
+    // env: {
+    //   test: {
+    //     plugins: ['babel-plugin-explicit-exports-references']
+    //   }
+    // }
   }
 );
 
+module.exports = config;
 debug('exported config: %O', module.exports);
 
 function getBabelAliases() {
@@ -29,10 +39,10 @@ function getBabelAliases() {
   // ! directly, consider regenerating aliases across the entire project with:
   // ! `npx symbiote project renovate --regenerate-assets --assets-preset ...`
   return {
-    '^rootverse:(.+)$': './$1',
     '^universe:(.+)$': './src/$1',
     '^universe$': './src/index.js',
     '^testverse:(.+)$': './test/$1',
-    '^typeverse:(.+)$': './types/$1'
+    '^typeverse:(.+)$': './types/$1',
+    '^rootverse:(.+)$': './$1'
   };
 }

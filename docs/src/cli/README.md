@@ -1,8 +1,8 @@
-[**@nhscc/bdpa-cron**](../../README.md)
+[**@nhscc/bdpa-cli**](../../README.md)
 
 ***
 
-[@nhscc/bdpa-cron](../../README.md) / src/cli
+[@nhscc/bdpa-cli](../../README.md) / src/cli
 
 # src/cli
 

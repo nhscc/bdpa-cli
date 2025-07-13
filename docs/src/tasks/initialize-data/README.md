@@ -1,8 +1,8 @@
-[**@nhscc/bdpa-cron**](../../../README.md)
+[**@nhscc/bdpa-cli**](../../../README.md)
 
 ***
 
-[@nhscc/bdpa-cron](../../../README.md) / src/tasks/initialize-data
+[@nhscc/bdpa-cli](../../../README.md) / src/tasks/initialize-data
 
 # src/tasks/initialize-data
 

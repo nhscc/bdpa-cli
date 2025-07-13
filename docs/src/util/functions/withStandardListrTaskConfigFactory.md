@@ -1,14 +1,14 @@
-[**@nhscc/bdpa-cron**](../../../README.md)
+[**@nhscc/bdpa-cli**](../../../README.md)
 
 ***
 
-[@nhscc/bdpa-cron](../../../README.md) / [src/util](../README.md) / withStandardListrTaskConfigFactory
+[@nhscc/bdpa-cli](../../../README.md) / [src/util](../README.md) / withStandardListrTaskConfigFactory
 
 # Function: withStandardListrTaskConfigFactory()
 
 > **withStandardListrTaskConfigFactory**\<`ListrContext`\>(`initialTaskRunnerContext`): (`config`) => `ListrTask`\<`unknown`, *typeof* `DefaultRenderer` \| *typeof* `VerboseRenderer`, *typeof* `SimpleRenderer`\>
 
-Defined in: [src/util.ts:37](https://github.com/nhscc/bdpa-cron/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/util.ts#L37)
+Defined in: [src/util.ts:37](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/util.ts#L37)
 
 ## Type Parameters
 

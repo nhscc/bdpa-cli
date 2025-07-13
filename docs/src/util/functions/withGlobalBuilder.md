@@ -1,14 +1,14 @@
-[**@nhscc/bdpa-cron**](../../../README.md)
+[**@nhscc/bdpa-cli**](../../../README.md)
 
 ***
 
-[@nhscc/bdpa-cron](../../../README.md) / [src/util](../README.md) / withGlobalBuilder
+[@nhscc/bdpa-cli](../../../README.md) / [src/util](../README.md) / withGlobalBuilder
 
 # Function: withGlobalBuilder()
 
 > **withGlobalBuilder**\<`CustomCliArguments`\>(...`__namedParameters`): `WithBuilderExtensionsReturnType`\<`CustomCliArguments`\>
 
-Defined in: [src/util.ts:114](https://github.com/nhscc/bdpa-cron/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/util.ts#L114)
+Defined in: [src/util.ts:114](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/util.ts#L114)
 
 A version of withStandardBuilder that expects `CustomCliArguments` to
 extend [GlobalCliArguments](../../configure/type-aliases/GlobalCliArguments.md) and implements any related global handler

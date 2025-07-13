@@ -1,12 +1,12 @@
-[**@nhscc/bdpa-cron**](../../../README.md)
+[**@nhscc/bdpa-cli**](../../../README.md)
 
 ***
 
-[@nhscc/bdpa-cron](../../../README.md) / [src/commands](../README.md) / Task
+[@nhscc/bdpa-cli](../../../README.md) / [src/commands](../README.md) / Task
 
 # Enumeration: Task
 
-Defined in: [src/commands/index.ts:31](https://github.com/nhscc/bdpa-cron/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L31)
+Defined in: [src/commands/index.ts:31](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L31)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [src/commands/index.ts:31](https://github.com/nhscc/bdpa-cron/blob/8
 
 > **All**: `"all"`
 
-Defined in: [src/commands/index.ts:36](https://github.com/nhscc/bdpa-cron/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L36)
+Defined in: [src/commands/index.ts:36](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L36)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/commands/index.ts:36](https://github.com/nhscc/bdpa-cron/blob/8
 
 > **BanHammer**: `"ban"`
 
-Defined in: [src/commands/index.ts:33](https://github.com/nhscc/bdpa-cron/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L33)
+Defined in: [src/commands/index.ts:33](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L33)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/commands/index.ts:33](https://github.com/nhscc/bdpa-cron/blob/8
 
 > **InitializeData**: `"initialize"`
 
-Defined in: [src/commands/index.ts:32](https://github.com/nhscc/bdpa-cron/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L32)
+Defined in: [src/commands/index.ts:32](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L32)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/commands/index.ts:32](https://github.com/nhscc/bdpa-cron/blob/8
 
 > **PruneData**: `"prune"`
 
-Defined in: [src/commands/index.ts:34](https://github.com/nhscc/bdpa-cron/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L34)
+Defined in: [src/commands/index.ts:34](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L34)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/commands/index.ts:34](https://github.com/nhscc/bdpa-cron/blob/8
 
 > **SimulateActivity**: `"simulate"`
 
-Defined in: [src/commands/index.ts:35](https://github.com/nhscc/bdpa-cron/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L35)
+Defined in: [src/commands/index.ts:35](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/commands/index.ts#L35)

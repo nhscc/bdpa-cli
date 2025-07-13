@@ -46,13 +46,13 @@ you for contribution 🎉, your efforts are greatly appreciated! 🙌🏿
 - Issues that go for an extended period without activity are subject to closure.
 
 [badge-issue-percentage]:
-  https://isitmaintained.com/badge/open/nhscc/bdpa-cron.svg
+  https://isitmaintained.com/badge/open/nhscc/bdpa-cli.svg
   'Open issues as a percentage of all issues'
 [badge-issue-resolution]:
-  https://isitmaintained.com/badge/resolution/nhscc/bdpa-cron.svg
+  https://isitmaintained.com/badge/resolution/nhscc/bdpa-cli.svg
   'Average time to resolve an issue'
-[choose-new-issue]: https://github.com/nhscc/bdpa-cron/issues/new/choose
+[choose-new-issue]: https://github.com/nhscc/bdpa-cli/issues/new/choose
 [github-blog]:
   https://github.com/blog/2119-add-reactions-to-pull-requests-issues-and-comments
-[link-issue-resolution]: https://isitmaintained.com/project/nhscc/bdpa-cron
-[open-issues]: https://github.com/nhscc/bdpa-cron/issues?q=
+[link-issue-resolution]: https://isitmaintained.com/project/nhscc/bdpa-cli
+[open-issues]: https://github.com/nhscc/bdpa-cli/issues?q=

@@ -1,8 +1,8 @@
-[**@nhscc/bdpa-cron**](../../../README.md)
+[**@nhscc/bdpa-cli**](../../../README.md)
 
 ***
 
-[@nhscc/bdpa-cron](../../../README.md) / [test/util](../README.md) / AsDefault
+[@nhscc/bdpa-cli](../../../README.md) / [test/util](../README.md) / AsDefault
 
 # Type Alias: AsDefault\<T\>
 

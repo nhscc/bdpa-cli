@@ -18,7 +18,7 @@ export default function command({
 
   return {
     builder,
-    description: 'Show aggregate usage statistics across all monitored systems',
+    description: 'Manage NHSCC API keys',
     usage: withGlobalUsage(),
     handler: withGlobalHandler(function ({
       $0: scriptFullName,

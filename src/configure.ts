@@ -10,14 +10,14 @@ import {
 import { createDebugLogger, createGenericLogger } from 'rejoinder';
 
 import {
-  allActualTargetProblems,
-  allInputTargets,
+  actualTargetProblems,
   configDirNameComponent,
   globalDebuggerNamespace,
   globalLoggerNamespace,
-  TargetDatabase,
+  inputTargets,
+  targetDatabases,
   TargetProblem,
-  TargetYear
+  targetYears
 } from 'universe:constant.ts';
 
 import { ErrorMessage } from 'universe:error.ts';
@@ -119,23 +119,23 @@ export const globalCliArguments = {
     alias: 'target',
     array: true,
     demandThisOption: true,
-    choices: allInputTargets,
+    choices: inputTargets,
     description: 'One or more APIs against which tasks are run',
     check: checkArrayNotEmpty('--targets'),
-    coerce(targets: Arrayable<(typeof allInputTargets)[number]>) {
+    coerce(targets: Arrayable<(typeof inputTargets)[number]>) {
       return Array.from(
         new Set(
           [targets].flat().flatMap((target) => {
             if (target === TargetProblem.All) {
-              return allActualTargetProblems;
+              return actualTargetProblems;
             }
 
-            if (target in TargetYear) {
-              return TargetYear[target as keyof TargetYear];
+            if (target in targetYears) {
+              return targetYears[target as keyof typeof targetYears];
             }
 
-            if (target in TargetDatabase) {
-              return TargetDatabase[target as keyof TargetDatabase];
+            if (target in targetDatabases) {
+              return targetDatabases[target as keyof typeof targetDatabases];
             }
 
             return target;
@@ -252,7 +252,10 @@ export const configureExecutionContext = async function (context) {
           ErrorMessage.InvalidConfigFile(
             fullKey,
             configPath,
-            `expected value to be of type "${validator}"; saw instead: "${typeof currentConfig}"`
+            ErrorMessage.UnexpectedValue(
+              `to be of type "${validator}"`,
+              typeof currentConfig
+            )
           )
         );
       }

@@ -1,8 +1,8 @@
-**@nhscc/bdpa-cron**
+**@nhscc/bdpa-cli**
 
 ***
 
-# @nhscc/bdpa-cron
+# @nhscc/bdpa-cli
 
 ## Modules
 

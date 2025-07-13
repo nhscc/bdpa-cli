@@ -6,7 +6,7 @@ this project adheres to [Semantic Versioning][2].
 
 <br />
 
-## @nhscc/bdpa-cron[@1.0.0][3] (2025-05-28)
+## @nhscc/bdpa-cli[@1.0.0][3] (2025-05-28)
 
 ### ✨ Features
 
@@ -24,7 +24,7 @@ this project adheres to [Semantic Versioning][2].
 
 <br />
 
-### 🏗️ Patch @nhscc/bdpa-cron[@1.0.1][12] (2025-05-30)
+### 🏗️ Patch @nhscc/bdpa-cli[@1.0.1][12] (2025-05-30)
 
 #### 🪄 Fixes
 
@@ -36,15 +36,15 @@ this project adheres to [Semantic Versioning][2].
 
 [1]: https://conventionalcommits.org
 [2]: https://semver.org
-[3]: https://github.com/nhscc/bdpa-cron/compare/abf0233e2b7377c224dc40d02e6091f130c94db7...@nhscc/bdpa-cron@1.0.0
-[4]: https://github.com/nhscc/bdpa-cron/commit/abf0233e2b7377c224dc40d02e6091f130c94db7
-[5]: https://github.com/nhscc/bdpa-cron/commit/a38709d3e8aeaebaa5c2320def4a3fc254ac04c8
-[6]: https://github.com/nhscc/bdpa-cron/commit/096f0290505c411b3fdc7f796df6e6ea029f5bff
-[7]: https://github.com/nhscc/bdpa-cron/commit/672b24d9314522a1edf0ba05bc015cc76eda8941
-[8]: https://github.com/nhscc/bdpa-cron/commit/737b4f2ca1090929d747a088dd2c130424b5306e
-[9]: https://github.com/nhscc/bdpa-cron/commit/7f42b19c00d44ee2ec3c689990c4f9fb3c09232d
-[10]: https://github.com/nhscc/bdpa-cron/commit/fb94d84b32201c9d8dab385121a53d5c0ecc3177
-[11]: https://github.com/nhscc/bdpa-cron/commit/670d6794a5cff2701b76ae7c78a2f6f20dbd2ecb
-[12]: https://github.com/nhscc/bdpa-cron/compare/@nhscc/bdpa-cron@1.0.0...@nhscc/bdpa-cron@1.0.1
-[13]: https://github.com/nhscc/bdpa-cron/commit/7d2ecaa554069434ddf0e3f05118f816332f92a4
-[14]: https://github.com/nhscc/bdpa-cron/commit/117c24c40266cf7a0f902a1bfc12de23f5efda5d
+[3]: https://github.com/nhscc/bdpa-cli/compare/abf0233e2b7377c224dc40d02e6091f130c94db7...@nhscc/bdpa-cli@1.0.0
+[4]: https://github.com/nhscc/bdpa-cli/commit/abf0233e2b7377c224dc40d02e6091f130c94db7
+[5]: https://github.com/nhscc/bdpa-cli/commit/a38709d3e8aeaebaa5c2320def4a3fc254ac04c8
+[6]: https://github.com/nhscc/bdpa-cli/commit/096f0290505c411b3fdc7f796df6e6ea029f5bff
+[7]: https://github.com/nhscc/bdpa-cli/commit/672b24d9314522a1edf0ba05bc015cc76eda8941
+[8]: https://github.com/nhscc/bdpa-cli/commit/737b4f2ca1090929d747a088dd2c130424b5306e
+[9]: https://github.com/nhscc/bdpa-cli/commit/7f42b19c00d44ee2ec3c689990c4f9fb3c09232d
+[10]: https://github.com/nhscc/bdpa-cli/commit/fb94d84b32201c9d8dab385121a53d5c0ecc3177
+[11]: https://github.com/nhscc/bdpa-cli/commit/670d6794a5cff2701b76ae7c78a2f6f20dbd2ecb
+[12]: https://github.com/nhscc/bdpa-cli/compare/@nhscc/bdpa-cli@1.0.0...@nhscc/bdpa-cli@1.0.1
+[13]: https://github.com/nhscc/bdpa-cli/commit/7d2ecaa554069434ddf0e3f05118f816332f92a4
+[14]: https://github.com/nhscc/bdpa-cli/commit/117c24c40266cf7a0f902a1bfc12de23f5efda5d

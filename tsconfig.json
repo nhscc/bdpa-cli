@@ -42,11 +42,11 @@
     // ! directly, consider regenerating aliases across the entire project with:
     // ! `npx symbiote project renovate --regenerate-assets --assets-preset ...`
     "paths": {
-      "universe:*": ["src/*"],
       "universe": ["src/index.ts"],
+      "universe:*": ["src/*"],
       "testverse:*": ["test/*"],
       "typeverse:*": ["types/*"],
-      "rootverse:*": ["./*"]
+      "rootverse:*": ["*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
@@ -62,9 +62,14 @@
   ],
   "exclude": [
     "**/dist/**/*",
+    "**/.next/**/*",
+    "**/.wrangler/**/*",
     "**/node_modules/**/*",
     "**/*.ignore",
-    "**/*.ignore.*/**/*",
-    "**/ignore.*"
+    "**/*.ignore/**/*",
+    "**/ignore.*",
+    "**/ignore.*/**/*",
+    "**/*.ignore.*",
+    "**/*.ignore.*/**/*"
   ]
 }

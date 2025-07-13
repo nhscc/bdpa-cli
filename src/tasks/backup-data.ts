@@ -5,8 +5,8 @@ import type { GlobalExecutionContext } from 'universe:configure.ts';
 import type { ActualTargetProblem } from 'universe:constant.ts';
 import type { TaskRunnerContext } from 'universe:util.ts';
 
-const fullPrettyName = 'simulate activity';
-const taskType = Task.SimulateActivity;
+const fullPrettyName = 'backup data';
+const taskType = Task.BackupData;
 
 export default async function task(
   taskName: string,

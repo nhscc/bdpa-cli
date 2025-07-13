@@ -1,14 +1,14 @@
-[**@nhscc/bdpa-cron**](../../../README.md)
+[**@nhscc/bdpa-cli**](../../../README.md)
 
 ***
 
-[@nhscc/bdpa-cron](../../../README.md) / [src/configure](../README.md) / GlobalCliArguments
+[@nhscc/bdpa-cli](../../../README.md) / [src/configure](../README.md) / GlobalCliArguments
 
 # Type Alias: GlobalCliArguments
 
 > **GlobalCliArguments** = `StandardCommonCliArguments` & `object`
 
-Defined in: [src/configure.ts:84](https://github.com/nhscc/bdpa-cron/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/configure.ts#L84)
+Defined in: [src/configure.ts:84](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/configure.ts#L84)
 
 These properties will be available in the `argv` object of any command that
 uses [withGlobalBuilder](../../util/functions/withGlobalBuilder.md) to construct its `builder`.

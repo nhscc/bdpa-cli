@@ -1,8 +1,8 @@
-[**@nhscc/bdpa-cron**](../../../README.md)
+[**@nhscc/bdpa-cli**](../../../README.md)
 
 ***
 
-[@nhscc/bdpa-cron](../../../README.md) / [test/util](../README.md) / NpmCopyPackageFixtureContext
+[@nhscc/bdpa-cli](../../../README.md) / [test/util](../README.md) / NpmCopyPackageFixtureContext
 
 # Type Alias: NpmCopyPackageFixtureContext
 

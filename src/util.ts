@@ -30,13 +30,55 @@ export type TaskRunnerContext<
 
 export type InitialTaskRunnerContext<
   ListrContext extends Record<string, unknown> = Record<string, unknown>
-> = Omit<TaskRunnerContext<ListrContext>, `listr${string}`>;
+> = Omit<TaskRunnerContext<ListrContext>, `listr${string}`> & {
+  loggerNamespace: string;
+};
+
+/**
+ * Skip a listr2 task.
+ */
+export function skipListrTask(
+  fullPrettyName: string,
+  debugLog: ExtendedLogger,
+  listrTask: TaskRunnerContext['listrTask']
+) {
+  debugLog(
+    [LogTag.IF_NOT_QUIETED],
+    '%O target-task combination is no-op',
+    fullPrettyName
+  );
+  listrTask.title = `Skipped task "${fullPrettyName}"`;
+  listrTask.skip(`Task not supported by target`);
+}
+
+/**
+ * Call this hack once before attempting to output using rejoinder within listr2
+ * in the specific circumstance that (1) you're using the `permanent` render
+ * option to keep the output text around and (2) it is not impossible that
+ * <100ms will pass before the first attempted output and (3) it is extremely
+ * important that the user sees every single line of this output text.
+ *
+ * Otherwise, stay away from this function. This issue needs further
+ * investigation!
+ */
+export async function waitForListr2OutputReady(standardDebug: ExtendedDebugger) {
+  // TODO: investigate this
+  // ? A bug in either rejoinder or listr2 makes stdout not work for some
+  // ? small amount of time, meaning messages output to stdout via
+  // ? rejoinder will disappear for a short while. This "fixes" that:
+
+  standardDebug.warn('waiting 100ms due to bug workaround (fixme)...');
+  await new Promise((r) => setTimeout(r, 100));
+}
 
 // TODO: taken from xunnctl; this needs to be added to @-xun/cli and replaced
 // TODO: here and in xunnctl (THIS IS THE LATEST VERSION AS OF 6/2025)
 export function withStandardListrTaskConfigFactory<
   ListrContext extends Record<string, unknown> = Record<string, unknown>
->(initialTaskRunnerContext: InitialTaskRunnerContext<ListrContext>) {
+>(
+  initialTaskRunnerContext: InitialTaskRunnerContext<ListrContext> &
+    Partial<Omit<ListrTaskLiteral, 'title' | 'task' | 'retry'>>
+) {
   return function withStandardListrTaskConfig(
     config: {
       initialTitle: string;
@@ -51,8 +93,29 @@ export function withStandardListrTaskConfigFactory<
       ...listrTaskLiteralConfig
     } = config;
 
+    const {
+      loggerNamespace,
+      standardLog: standardLog_,
+      standardDebug: standardDebug_
+    } = initialTaskRunnerContext;
+
+    if (
+      !standardLog_.namespace.includes(`${loggerNamespace}:`) &&
+      !standardLog_.namespace.includes(`:${loggerNamespace}`)
+    ) {
+      initialTaskRunnerContext.standardLog = standardLog_.extend(loggerNamespace);
+    }
+
+    if (
+      !standardDebug_.namespace.includes(`${loggerNamespace}:`) &&
+      !standardDebug_.namespace.includes(`:${loggerNamespace}`)
+    ) {
+      initialTaskRunnerContext.standardDebug = standardDebug_.extend(loggerNamespace);
+    }
+
     return {
       rendererOptions: { outputBar: 3 },
+      ...initialTaskRunnerContext,
       ...listrTaskLiteralConfig,
       title: initialTitle,
       ...(shouldRetry
@@ -64,6 +127,7 @@ export function withStandardListrTaskConfigFactory<
           }
         : {}),
       task: async function (listrContext: { initialTitle?: string }, thisTask) {
+        // TODO: does listr2 handle retry logic by itself properly yet?
         if (shouldRetry) {
           const retryData = thisTask.isRetrying();
           const retryCount = Number(retryData?.count || 0);
@@ -80,7 +144,7 @@ export function withStandardListrTaskConfigFactory<
         }
 
         const taskLog = createListrTaskLogger({
-          namespace: 'task',
+          namespace: loggerNamespace,
           task: thisTask
         });
 

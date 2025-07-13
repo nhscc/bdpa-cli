@@ -1,14 +1,14 @@
-[**@nhscc/bdpa-cron**](../../../README.md)
+[**@nhscc/bdpa-cli**](../../../README.md)
 
 ***
 
-[@nhscc/bdpa-cron](../../../README.md) / [src/configure](../README.md) / GlobalExecutionContext
+[@nhscc/bdpa-cli](../../../README.md) / [src/configure](../README.md) / GlobalExecutionContext
 
 # Type Alias: GlobalExecutionContext
 
 > **GlobalExecutionContext** = `StandardExecutionContextWithListr2` & `object`
 
-Defined in: [src/configure.ts:55](https://github.com/nhscc/bdpa-cron/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/configure.ts#L55)
+Defined in: [src/configure.ts:55](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/configure.ts#L55)
 
 ## Type declaration
 
