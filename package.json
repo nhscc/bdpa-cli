@@ -98,7 +98,7 @@
   "devDependencies": {
     "@-xun/fs": "^2.0.0",
     "@-xun/mongo-test": "^2.1.2",
-    "@-xun/symbiote": "^4.11.0"
+    "@-xun/symbiote": "^4.11.1"
   },
   "engines": {
     "node": "^20.18.0 || >=22.12.0"
