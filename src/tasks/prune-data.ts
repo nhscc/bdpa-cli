@@ -203,8 +203,8 @@ export default async function task(
           'root.request-log',
           'root.limited-log',
           'app.users',
-          'app.fileNodes',
-          'app.metaNodes'
+          'app.file-nodes',
+          'app.meta-nodes'
         ]);
 
         const backend = await targetProblemBackends.drive;
@@ -234,8 +234,8 @@ export default async function task(
               return usernames.length;
             }
           },
-          'app.fileNodes': {
-            limit: { maxBytes: config['app.fileNodes'] },
+          'app.file-nodes': {
+            limit: { maxBytes: config['app.file-nodes'] },
             async deleteFn(thresholdEntry) {
               const db = await getDb({ name: 'hscc-api-drive' });
 
@@ -258,8 +258,8 @@ export default async function task(
               return ids.length;
             }
           },
-          'app.metaNodes': {
-            limit: { maxBytes: config['app.metaNodes'] },
+          'app.meta-nodes': {
+            limit: { maxBytes: config['app.meta-nodes'] },
             async deleteFn(thresholdEntry) {
               const db = await getDb({ name: 'hscc-api-drive' });
               const metaNodes = db.collection<DriveDb.InternalNode>('meta-nodes');
