@@ -1,245 +1,263 @@
 // * These tests ensure the exported interfaces under test function as expected.
 
-// import { useMockDateNow } from 'multiverse/mongo-common';
-// import { getDb } from 'multiverse/mongo-schema';
-// import { setupMemoryServerOverride } from 'multiverse/mongo-test';
+import { runWithMongoSchemaMultitenancy } from '@-xun/mongo-schema/multitenant';
+import { setupMemoryServerOverride } from '@-xun/mongo-test';
+import { getSchemaConfig } from '@nhscc/backend-drive/db';
+import { getDummyData } from '@nhscc/backend-drive/dummy';
 
-// import {
-//   mockEnvFactory,
-//   protectedImportFactory,
-//   withMockedOutput
-// } from 'testverse/setup';
+import pruneData from 'universe:tasks/prune-data.ts';
 
-// import { TrialError, ValidationError } from 'universe/error';
+import {
+  getCollectionSize,
+  makeSetupTestFunction,
+  useMockDateNow,
+  withMockedOutput
+} from 'testverse:util.ts';
 
-// // * Follow the steps (below) to tailor these tests to this specific project 😉
+useMockDateNow();
 
-// // ? Ensure the isolated external picks up the memory server override
-// jest.mock('multiverse/mongo-schema', (): typeof import('multiverse/mongo-schema') => {
-//   return jest.requireActual('multiverse/mongo-schema');
-// });
+const {
+  initializeMemoryServerOverride,
+  killMemoryServerOverride,
+  resetSharedMemory,
+  reinitializeServerDatabases
+} = setupMemoryServerOverride({ defer: 'without-hooks' });
 
-// // // * Step 1: Add new collections here w/ keys of form: database.collection
-// // ! Only do step 1 if you're using count-based limits and NOT byte-based!
-// // const testCollectionsMap = {
-// //   'root.request-log': dummyRootData['request-log'].length,
-// //   'root.limited-log': dummyRootData['limited-log'].length,
-// //   ...
-// // };
+describe('target: drive', () => {
+  const target = 'drive';
 
-// const testCollections = [
-//   'root.request-log',
-//   'root.limited-log',
-//   'app.elections',
-//   'app.ballots'
-// ] as const;
+  const { setupTest } = makeSetupTestFunction({
+    target,
+    initializeMemoryServerOverride,
+    killMemoryServerOverride,
+    reinitializeServerDatabases,
+    resetSharedMemory,
+    schema: getSchemaConfig(),
+    data: getDummyData(),
+    taskConfig: {
+      'root.request-log': '100mb',
+      'root.limited-log': '10mb',
+      'app.users': '100mb',
+      'app.file-nodes': '200mb',
+      'app.meta-nodes': '40mb'
+    }
+  });
 
-// const withMockedEnv = mockEnvFactory({
-//   NODE_ENV: 'test',
-//   PRUNE_DATA_MAX_LOGS_BYTES: '100mb',
-//   PRUNE_DATA_MAX_BANNED_BYTES: '10mb',
-//   // * Step 2: Add new env var default values here
-//   PRUNE_DATA_MAX_ELECTIONS_BYTES: '200mb',
-//   PRUNE_DATA_MAX_BALLOTS_BYTES: '120mb'
-// });
+  it('prunes documents from target collections with respect to secrets.json', async () => {
+    expect.hasAssertions();
 
-// const importPruneData = protectedImportFactory<
-//   typeof import('externals/prune-data').default
-// >({
-//   path: 'externals/prune-data',
-//   useDefault: true
-// });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { getConfig, collectionsUnderTest, initialSizes, taskRunnerContext } =
+      await setupTest();
 
-// setupMemoryServerOverride();
-// useMockDateNow();
+    // ? Expect the pruning algorithm to shrink the database by ~1/2 documents
+    await withMockedOutput(async ({ nodeLogSpy }) => {
+      const expectedSizes = Object.fromEntries(
+        Object.entries(initialSizes).map(([k, v]) => [k, Math.round(v / 2)] as const)
+      );
 
-// /**
-//  * Accepts one or more database and collection names in the form
-//  * `database.collection` and returns the number of documents contained in each
-//  * collection or the size of each collection in bytes depending on the value of
-//  * `metric`.
-//  */
-// async function getCollectionSize(
-//   collection: string,
-//   { metric }: { metric: 'count' | 'bytes' }
-// ): Promise<number>;
-// async function getCollectionSize(
-//   collections: readonly string[],
-//   { metric }: { metric: 'count' | 'bytes' }
-// ): Promise<Record<(typeof testCollections)[number], number>>;
-// async function getCollectionSize(
-//   collections: string | readonly string[],
-//   { metric }: { metric: 'count' | 'bytes' }
-// ): Promise<number | Record<string, number>> {
-//   const targetCollections = [collections].flat();
-//   const result = Object.assign(
-//     {},
-//     ...(await Promise.all(
-//       targetCollections.map(async (dbCollection) => {
-//         const [dbName, ...rawCollectionName] = dbCollection.split('.');
+      const fakeGetConfig = (() => {
+        return Object.fromEntries(
+          Object.entries(expectedSizes).map(([k, v]) => [k, v.toString() + 'b'] as const)
+        );
+      }) as typeof getConfig;
 
-//         if (!dbName || rawCollectionName.length !== 1) {
-//           throw new TrialError(`invalid input "${dbCollection}" to countCollection`);
-//         }
+      await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-//         const colDb = (await getDb({ name: dbName })).collection(rawCollectionName[0]);
+      await runWithMongoSchemaMultitenancy(target, async () => {
+        const actualSizesEntries = Object.entries(
+          await getCollectionSize(collectionsUnderTest)
+        );
 
-//         if (metric === 'count') {
-//           return colDb.countDocuments().then((count) => ({ [dbCollection]: count }));
-//         } else if (metric === 'bytes') {
-//           return colDb
-//             .aggregate<{ size: number }>([
-//               {
-//                 $group: {
-//                   _id: null,
-//                   size: { $sum: { $bsonSize: '$$ROOT' } }
-//                 }
-//               }
-//             ])
-//             .next()
-//             .then((r) => ({
-//               [dbCollection]: r?.size ?? 0
-//             }));
-//         } else {
-//           throw new ValidationError(`unknown metric "${metric}"`);
-//         }
-//       })
-//     ))
-//   );
+        for (const [index, [dbCollection, size]] of actualSizesEntries.entries()) {
+          const collectionNameUnderTest = collectionsUnderTest[index]!;
 
-//   const resultLength = Object.keys(result).length;
+          expect({ dbCollection, size }).toStrictEqual({
+            dbCollection,
+            size: expect.toBeWithin(0, expectedSizes[collectionNameUnderTest]!)
+          });
+        }
+      });
 
-//   if (resultLength !== targetCollections.length) {
-//     throw new TrialError('invalid output from countCollection');
-//   }
+      expect(nodeLogSpy).toHaveBeenCalledTimes(collectionsUnderTest.length);
+    });
 
-//   return resultLength === 1 ? result[collections.toString()] : result;
-// }
+    // ? Expect the pruning algorithm to shrink the database to 0 documents
+    await withMockedOutput(async ({ nodeLogSpy }) => {
+      const fakeGetConfig = (() => {
+        return Object.fromEntries(
+          Object.entries(initialSizes).map(([k, _v]) => [k, '1b'] as const)
+        );
+      }) as typeof getConfig;
 
-// it('is verbose when no DEBUG environment variable set and compiled NODE_ENV is not test', async () => {
-//   expect.hasAssertions();
+      await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-//   await withMockedOutput(async ({ infoSpy }) => {
-//     await withMockedEnv(() => importPruneData({ expectedExitCode: 0 }), {
-//       DEBUG: undefined,
-//       NODE_ENV: 'something-else',
-//       OVERRIDE_EXPECT_ENV: 'force-no-check'
-//     });
+      await runWithMongoSchemaMultitenancy(target, async () => {
+        const actualSizesEntries = Object.entries(
+          await getCollectionSize(collectionsUnderTest)
+        );
 
-//     expect(infoSpy.mock.calls.at(-1)?.[0]).toStrictEqual(
-//       expect.stringContaining('execution complete')
-//     );
-//   });
+        for (const [dbCollection, size] of actualSizesEntries) {
+          expect({ dbCollection, size }).toStrictEqual({ dbCollection, size: 0 });
+        }
+      });
 
-//   await withMockedOutput(async ({ infoSpy }) => {
-//     await withMockedEnv(() => importPruneData({ expectedExitCode: 0 }));
-//     expect(infoSpy).not.toHaveBeenCalled();
-//   });
-// });
+      expect(nodeLogSpy).toHaveBeenCalledTimes(collectionsUnderTest.length);
+    });
+  });
 
-// it('rejects on bad environment', async () => {
-//   expect.hasAssertions();
+  it('only deletes entries if necessary', async () => {
+    expect.hasAssertions();
 
-//   // * Step 3: Add new env vars emptiness tests below
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { getConfig, collectionsUnderTest, initialSizes, taskRunnerContext } =
+      await setupTest();
 
-//   // ? Remember that withMockedEnv is the result of calling a factory function
-//   // ? with all the PRUNE_DATA_MAX_X env vars already defined.
+    await withMockedOutput(async ({ nodeLogSpy }) => {
+      const fakeGetConfig = (() => {
+        return Object.fromEntries(
+          Object.entries(initialSizes).map(([k, _v]) => [k, '100gb'] as const)
+        );
+      }) as typeof getConfig;
 
-//   await withMockedEnv(() => importPruneData({ expectedExitCode: 2 }), {
-//     PRUNE_DATA_MAX_LOGS_BYTES: '',
-//     PRUNE_DATA_MAX_BANNED_BYTES: '',
-//     PRUNE_DATA_MAX_BALLOTS_BYTES: '',
-//     PRUNE_DATA_MAX_ELECTIONS_BYTES: ''
-//   });
+      await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-//   await withMockedEnv(() => importPruneData({ expectedExitCode: 2 }), {
-//     PRUNE_DATA_MAX_LOGS_BYTES: ''
-//   });
+      await runWithMongoSchemaMultitenancy(target, async () => {
+        const actualSizesEntries = Object.entries(
+          await getCollectionSize(collectionsUnderTest)
+        );
 
-//   await withMockedEnv(() => importPruneData({ expectedExitCode: 2 }), {
-//     PRUNE_DATA_MAX_BANNED_BYTES: ''
-//   });
+        for (const [index, [dbCollection, size]] of actualSizesEntries.entries()) {
+          const collectionNameUnderTest = collectionsUnderTest[index]!;
 
-//   await withMockedEnv(() => importPruneData({ expectedExitCode: 2 }), {
-//     PRUNE_DATA_MAX_BALLOTS_BYTES: ''
-//   });
+          expect({ dbCollection, size }).toStrictEqual({
+            dbCollection,
+            size: initialSizes[collectionNameUnderTest]
+          });
+        }
+      });
 
-//   await withMockedEnv(() => importPruneData({ expectedExitCode: 2 }), {
-//     PRUNE_DATA_MAX_ELECTIONS_BYTES: ''
-//   });
-// });
+      expect(nodeLogSpy).toHaveBeenCalledTimes(collectionsUnderTest.length);
+    });
+  });
+});
 
-// // ? This is a bytes-based test. Look elsewhere for the old count-based tests!
-// it('respects the limits imposed by PRUNE_DATA_MAX_X environment variables', async () => {
-//   expect.hasAssertions();
+describe('target: qoverflow', () => {
+  const target = 'qoverflow';
 
-//   const initialSizes = await getCollectionSize(testCollections, { metric: 'bytes' });
+  const { setupTest } = makeSetupTestFunction({
+    target,
+    initializeMemoryServerOverride,
+    killMemoryServerOverride,
+    reinitializeServerDatabases,
+    resetSharedMemory,
+    schema: getSchemaConfig(),
+    data: getDummyData(),
+    taskConfig: {
+      'root.request-log': '50mb',
+      'root.limited-log': '10mb',
+      'app.mail': '10mb',
+      'app.questions': '350mb',
+      'app.users': '30mb'
+    }
+  });
 
-//   // * Step 4: Add new env vars low-prune-threshold tests below.
+  it('prunes documents from target collections with respect to secrets.json', async () => {
+    expect.hasAssertions();
 
-//   const expectedSizes = {
-//     'root.request-log': initialSizes['root.request-log'] / 2,
-//     'root.limited-log': initialSizes['root.limited-log'] / 2,
-//     'app.elections': initialSizes['app.elections'] / 2,
-//     'app.ballots': initialSizes['app.ballots'] / 2
-//   };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { getConfig, collectionsUnderTest, initialSizes, taskRunnerContext } =
+      await setupTest();
 
-//   await withMockedEnv(() => importPruneData({ expectedExitCode: 0 }), {
-//     PRUNE_DATA_MAX_LOGS_BYTES: String(expectedSizes['root.request-log']),
-//     PRUNE_DATA_MAX_BANNED_BYTES: String(expectedSizes['root.limited-log']),
-//     PRUNE_DATA_MAX_ELECTIONS_BYTES: String(expectedSizes['app.elections']),
-//     PRUNE_DATA_MAX_BALLOTS_BYTES: String(expectedSizes['app.ballots'])
-//   });
+    // ? Expect the pruning algorithm to shrink the database by ~1/2 documents
+    await withMockedOutput(async ({ nodeLogSpy }) => {
+      const expectedSizes = Object.fromEntries(
+        Object.entries(initialSizes).map(([k, v]) => [k, Math.round(v / 2)] as const)
+      );
 
-//   const newSizes = await getCollectionSize(testCollections, { metric: 'bytes' });
+      const fakeGetConfig = (() => {
+        return Object.fromEntries(
+          Object.entries(expectedSizes).map(([k, v]) => [k, v.toString() + 'b'] as const)
+        );
+      }) as typeof getConfig;
 
-//   expect(newSizes['root.request-log']).toBeLessThanOrEqual(
-//     expectedSizes['root.request-log']
-//   );
+      await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-//   expect(newSizes['root.limited-log']).toBeLessThanOrEqual(
-//     expectedSizes['root.limited-log']
-//   );
+      await runWithMongoSchemaMultitenancy(target, async () => {
+        const actualSizesEntries = Object.entries(
+          await getCollectionSize(collectionsUnderTest)
+        );
 
-//   expect(newSizes['app.elections']).toBeLessThanOrEqual(expectedSizes['app.elections']);
-//   expect(newSizes['app.ballots']).toBeLessThanOrEqual(expectedSizes['app.ballots']);
+        for (const [index, [dbCollection, size]] of actualSizesEntries.entries()) {
+          const collectionNameUnderTest = collectionsUnderTest[index]!;
+          const expectedSize = expectedSizes[collectionNameUnderTest]!;
 
-//   await withMockedEnv(() => importPruneData({ expectedExitCode: 0 }), {
-//     PRUNE_DATA_MAX_LOGS_BYTES: '1',
-//     PRUNE_DATA_MAX_BANNED_BYTES: '1',
-//     PRUNE_DATA_MAX_ELECTIONS_BYTES: '1',
-//     PRUNE_DATA_MAX_BALLOTS_BYTES: '1'
-//   });
+          expect({ dbCollection, size }).toStrictEqual({
+            dbCollection,
+            size: expectedSize === 0 ? 0 : expect.toBeWithin(0, expectedSize)
+          });
+        }
+      });
 
-//   const latestSizes = await getCollectionSize(testCollections, { metric: 'bytes' });
+      expect(nodeLogSpy).toHaveBeenCalledTimes(collectionsUnderTest.length);
+    });
 
-//   expect(latestSizes['root.request-log']).toBe(0);
-//   expect(latestSizes['root.limited-log']).toBe(0);
-//   expect(latestSizes['app.elections']).toBe(0);
-//   expect(latestSizes['app.ballots']).toBe(0);
-// });
+    // ? Expect the pruning algorithm to shrink the database to 0 documents
+    await withMockedOutput(async ({ nodeLogSpy }) => {
+      const fakeGetConfig = (() => {
+        return Object.fromEntries(
+          Object.entries(initialSizes).map(([k, _v]) => [k, '1b'] as const)
+        );
+      }) as typeof getConfig;
 
-// // ? This is a bytes-based test. Look elsewhere for the old count-based tests!
-// it('only deletes entries if necessary', async () => {
-//   expect.hasAssertions();
+      await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-//   const initialSizes = await getCollectionSize(testCollections, { metric: 'bytes' });
+      await runWithMongoSchemaMultitenancy(target, async () => {
+        const actualSizesEntries = Object.entries(
+          await getCollectionSize(collectionsUnderTest)
+        );
 
-//   await withMockedEnv(() => importPruneData({ expectedExitCode: 0 }), {
-//     PRUNE_DATA_MAX_LOGS_BYTES: '100gb',
-//     PRUNE_DATA_MAX_BANNED_BYTES: '100gb',
-//     // * Step 5: Add new env vars high-prune-threshold values here
-//     PRUNE_DATA_MAX_ELECTIONS_BYTES: '100gb',
-//     PRUNE_DATA_MAX_BALLOTS_BYTES: '100gb'
-//   });
+        for (const [dbCollection, size] of actualSizesEntries) {
+          expect({ dbCollection, size }).toStrictEqual({ dbCollection, size: 0 });
+        }
+      });
 
-//   const newSizes = await getCollectionSize(testCollections, { metric: 'bytes' });
+      expect(nodeLogSpy).toHaveBeenCalledTimes(collectionsUnderTest.length);
+    });
+  });
 
-//   expect(newSizes['root.request-log']).toBe(initialSizes['root.request-log']);
-//   expect(newSizes['root.limited-log']).toBe(initialSizes['root.limited-log']);
+  it('only deletes entries if necessary', async () => {
+    expect.hasAssertions();
 
-//   expect(newSizes['app.elections']).toBe(initialSizes['app.elections']);
-//   expect(newSizes['app.ballots']).toBe(initialSizes['app.ballots']);
-// });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { getConfig, collectionsUnderTest, initialSizes, taskRunnerContext } =
+      await setupTest();
 
-test.todo('this');
+    await withMockedOutput(async ({ nodeLogSpy }) => {
+      const fakeGetConfig = (() => {
+        return Object.fromEntries(
+          Object.entries(initialSizes).map(([k, _v]) => [k, '100gb'] as const)
+        );
+      }) as typeof getConfig;
+
+      await pruneData('test', target, fakeGetConfig, taskRunnerContext);
+
+      await runWithMongoSchemaMultitenancy(target, async () => {
+        const actualSizesEntries = Object.entries(
+          await getCollectionSize(collectionsUnderTest)
+        );
+
+        for (const [index, [dbCollection, size]] of actualSizesEntries.entries()) {
+          const collectionNameUnderTest = collectionsUnderTest[index]!;
+
+          expect({ dbCollection, size }).toStrictEqual({
+            dbCollection,
+            size: initialSizes[collectionNameUnderTest]
+          });
+        }
+      });
+
+      expect(nodeLogSpy).toHaveBeenCalledTimes(collectionsUnderTest.length);
+    });
+  });
+});
