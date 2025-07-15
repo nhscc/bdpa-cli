@@ -11,6 +11,9 @@ export const ErrorMessage = {
   InvalidBytes(bytes: unknown) {
     return `specified byte value "${String(bytes)}" is either non-numeric or non-positive`;
   },
+  InvalidCollectionSizeInput(dbCollection: string) {
+    return `invalid input "${dbCollection}" to countCollection`;
+  },
   TooManyBytes(bytes: number, maxBytes: number) {
     return `"${String(bytes)}b" total bytes is greater than the max allowed (${maxBytes}b)`;
   },
