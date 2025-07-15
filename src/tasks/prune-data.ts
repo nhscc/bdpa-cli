@@ -420,11 +420,10 @@ export default async function task(
         const [dbName, collectionName] = targetPath.split('.');
 
         assert(dbName && collectionName);
-        debug('using db %O', dbName);
 
         const db = await getDb({ name: dbName });
-
         const name = `${dbName}.${collectionName}`;
+
         debug('collection %O is a target for pruning', name);
 
         const subLog = taskLog.extend(target).extend(name);
@@ -439,7 +438,7 @@ export default async function task(
 
         debug('sorting %O by %O', name, orderBy);
         debug(
-          `iteratively summing document size until limit is reached (%O bytes)`,
+          `iteratively summing document size until limit (%O bytes) is reached`,
           maxBytes
         );
 
@@ -472,8 +471,8 @@ export default async function task(
         await pruneCollectionAtThreshold(
           foundThresholdId && thresholdId ? { _id: thresholdId } : null,
           deleteFn,
-          `${totalCount}, ${totalSizeBytes}b > ${maxBytes}b`,
-          `${totalCount}, ${totalSizeBytes}b <= ${maxBytes}b`
+          `${totalCount} pruned (${totalSizeBytes}b > ${maxBytes}b)`,
+          `${totalCount} pruned (${totalSizeBytes}b <= ${maxBytes}b)`
         ).then(() => cursor.close());
 
         async function pruneCollectionAtThreshold(
@@ -500,9 +499,9 @@ export default async function task(
               ).deletedCount;
             }
 
-            subLog(`${deletedCount} pruned (${pruneMessage})`);
+            subLog(`${deletedCount}/${pruneMessage}`);
           } else {
-            subLog(`0 pruned (${noPruneMessage})`);
+            subLog(`0/${noPruneMessage}`);
           }
         }
       })
@@ -570,7 +569,7 @@ export default async function task(
     const finalConfig = Object.fromEntries(
       Object.entries(incomingConfig).map(([k, v]) => {
         const bytes = parseBytes(String(v));
-        assert(bytes && bytes > 0, ErrorMessage.InvalidBytes(maxAllowedBytes));
+        assert(bytes !== null && bytes >= 0, ErrorMessage.InvalidBytes(maxAllowedBytes));
 
         bytesCount += bytes;
         return [k, bytes] as const;
