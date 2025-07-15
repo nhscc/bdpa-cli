@@ -91,6 +91,8 @@ export default async function task(
               ? targetProblemBackends['elections-irv']
               : targetProblemBackends.elections;
 
+        void backend;
+
         const limits: Record<keyof typeof config, CollectionDataLimit> = {
           'root.request-log': {
             limit: { maxBytes: config['root.request-log'] }
