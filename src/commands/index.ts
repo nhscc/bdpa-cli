@@ -270,7 +270,7 @@ ${actualTargetProblems
       debug('isQuieted: %O', isQuieted);
       debug('isSilenced: %O', isSilenced);
 
-      standardLog([LogTag.IF_NOT_SILENCED], 'API tasks: %O', requestedApiTasks);
+      standardLog([LogTag.IF_NOT_SILENCED], 'API   tasks: %O', requestedApiTasks);
       standardLog.newline([LogTag.IF_NOT_SILENCED]);
 
       const apiTaskRenderOptions = {

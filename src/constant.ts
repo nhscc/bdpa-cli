@@ -73,10 +73,32 @@ export const targetProblemBackends = {
     );
   },
   get drive() {
-    return import('@nhscc/backend-drive');
+    return import('@nhscc/backend-drive').then(async (api) => {
+      return {
+        ...api,
+        db: await import('@nhscc/backend-drive/db'),
+        env: await import('@nhscc/backend-drive/env')
+      };
+    }) as Promise<
+      typeof import('@nhscc/backend-drive') & {
+        db: typeof import('@nhscc/backend-drive/db');
+        env: typeof import('@nhscc/backend-drive/env');
+      }
+    >;
   },
   get qoverflow() {
-    return import('@nhscc/backend-qoverflow');
+    return import('@nhscc/backend-qoverflow').then(async (api) => {
+      return {
+        ...api,
+        db: await import('@nhscc/backend-qoverflow/db'),
+        env: await import('@nhscc/backend-qoverflow/env')
+      };
+    }) as Promise<
+      typeof import('@nhscc/backend-qoverflow') & {
+        db: typeof import('@nhscc/backend-qoverflow/db');
+        env: typeof import('@nhscc/backend-qoverflow/env');
+      }
+    >;
   },
   get blogpress() {
     return Promise.reject(

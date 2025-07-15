@@ -12,6 +12,8 @@ import type { ExtendedDebugger, ExtendedLogger } from 'rejoinder';
 import type { ListrManager } from 'rejoinder-listr2';
 import type { GlobalCliArguments, GlobalExecutionContext } from 'universe:configure.ts';
 
+export { withStandardUsage as withGlobalUsage };
+
 export type ListrTaskLiteral = Exclude<
   Parameters<ListrManager['add']>[0],
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
@@ -235,4 +237,6 @@ export function withGlobalBuilder<CustomCliArguments extends GlobalCliArguments>
   ];
 }
 
-export { withStandardUsage as withGlobalUsage };
+export function isRecord(o: unknown): o is Record<string, unknown> {
+  return !!o && typeof o === 'object' && !Array.isArray(o);
+}

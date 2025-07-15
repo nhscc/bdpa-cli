@@ -7,6 +7,7 @@ import {
   makeStandardConfigureExecutionContext
 } from '@-xun/cli/configure';
 
+import { closeClient } from '@-xun/mongo-schema';
 import { createDebugLogger, createGenericLogger } from 'rejoinder';
 
 import {
@@ -21,11 +22,13 @@ import {
 } from 'universe:constant.ts';
 
 import { ErrorMessage } from 'universe:error.ts';
+import { isRecord } from 'universe:util.ts';
 
 import type {
   BfeBuilderObject,
   ConfigureErrorHandlingEpilogue,
-  ConfigureExecutionContext
+  ConfigureExecutionContext,
+  ConfigureExecutionEpilogue
 } from '@-xun/cli';
 
 import type {
@@ -182,11 +185,11 @@ export const configureExecutionContext = async function (context) {
     currentConfig: unknown = config
   ) {
     const [firstKey, ...remainingKeys] = key.split('.');
-    const currentConfigWasAPlainObject = isPlainObject(currentConfig);
+    const currentConfigWasAPlainObject = isRecord(currentConfig);
 
     currentConfig =
-      firstKey && isPlainObject(currentConfig) && firstKey in currentConfig
-        ? currentConfig[firstKey as keyof typeof currentConfig]
+      firstKey && isRecord(currentConfig) && firstKey in currentConfig
+        ? currentConfig[firstKey]
         : undefined;
 
     if (currentConfigWasAPlainObject && remainingKeys.length) {
@@ -265,8 +268,12 @@ export const configureExecutionContext = async function (context) {
   }
 } as ConfigureExecutionContext<GlobalExecutionContext>;
 
-export const configureErrorHandlingEpilogue =
-  makeStandardConfigureErrorHandlingEpilogue() as ConfigureErrorHandlingEpilogue<GlobalExecutionContext>;
+export const configureExecutionEpilogue = async function (argv) {
+  await closeClient({ clearCache: 'all-tenants' });
+  return argv;
+} as ConfigureExecutionEpilogue<GlobalExecutionContext>;
 
-const isPlainObject = (o: unknown): o is object =>
-  !!o && typeof o === 'object' && !Array.isArray(o);
+export const configureErrorHandlingEpilogue = async function (...args) {
+  await closeClient({ clearCache: 'all-tenants' });
+  await makeStandardConfigureErrorHandlingEpilogue()(...args);
+} as ConfigureErrorHandlingEpilogue<GlobalExecutionContext>;

@@ -1,9 +1,13 @@
 // * These tests ensure the exported interfaces under test function as expected.
 
+import assert from 'node:assert';
+
 import { runWithMongoSchemaMultitenancy } from '@-xun/mongo-schema/multitenant';
 import { setupMemoryServerOverride } from '@-xun/mongo-test';
-import { getSchemaConfig } from '@nhscc/backend-drive/db';
-import { getDummyData } from '@nhscc/backend-drive/dummy';
+import { getSchemaConfig as getDriveSchemaConfig } from '@nhscc/backend-drive/db';
+import { getDummyData as getDriveDummyData } from '@nhscc/backend-drive/dummy';
+import { getSchemaConfig as getQoverflowSchemaConfig } from '@nhscc/backend-qoverflow/db';
+import { getDummyData as getQoverflowDummyData } from '@nhscc/backend-qoverflow/dummy';
 
 import pruneData from 'universe:tasks/prune-data.ts';
 
@@ -32,8 +36,8 @@ describe('target: drive', () => {
     killMemoryServerOverride,
     reinitializeServerDatabases,
     resetSharedMemory,
-    schema: getSchemaConfig(),
-    data: getDummyData(),
+    schema: getDriveSchemaConfig(),
+    data: getDriveDummyData(),
     taskConfig: {
       'root.request-log': '100mb',
       'root.limited-log': '10mb',
@@ -129,6 +133,7 @@ describe('target: drive', () => {
 
         for (const [index, [dbCollection, size]] of actualSizesEntries.entries()) {
           const collectionNameUnderTest = collectionsUnderTest[index]!;
+          assert(size > 0);
 
           expect({ dbCollection, size }).toStrictEqual({
             dbCollection,
@@ -151,8 +156,8 @@ describe('target: qoverflow', () => {
     killMemoryServerOverride,
     reinitializeServerDatabases,
     resetSharedMemory,
-    schema: getSchemaConfig(),
-    data: getDummyData(),
+    schema: getQoverflowSchemaConfig(),
+    data: getQoverflowDummyData(),
     taskConfig: {
       'root.request-log': '50mb',
       'root.limited-log': '10mb',
@@ -249,6 +254,7 @@ describe('target: qoverflow', () => {
 
         for (const [index, [dbCollection, size]] of actualSizesEntries.entries()) {
           const collectionNameUnderTest = collectionsUnderTest[index]!;
+          assert(size > 0);
 
           expect({ dbCollection, size }).toStrictEqual({
             dbCollection,

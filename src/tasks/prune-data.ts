@@ -1,13 +1,13 @@
 import assert from 'node:assert';
 
 import { LogTag } from '@-xun/cli/logging';
-import { getDb } from '@-xun/mongo-schema';
+import { getClient, getDb, setSchemaConfig } from '@-xun/mongo-schema';
 import { runWithMongoSchemaMultitenancy } from '@-xun/mongo-schema/multitenant';
-import { parse as parseBytes } from 'bytes';
+import { format as stringifyBytes, parse as parseBytes } from 'bytes';
 
 import { TargetProblem, targetProblemBackends, Task } from 'universe:constant.ts';
 import { ErrorMessage } from 'universe:error.ts';
-import { skipListrTask, waitForListr2OutputReady } from 'universe:util.ts';
+import { isRecord, skipListrTask, waitForListr2OutputReady } from 'universe:util.ts';
 
 import type DriveDb from '@nhscc/backend-drive/db';
 import type QoverflowDb from '@nhscc/backend-qoverflow/db';
@@ -91,7 +91,9 @@ export default async function task(
               ? targetProblemBackends['elections-irv']
               : targetProblemBackends.elections;
 
-        void backend;
+        // TODO: remove the next line
+        // @ts-expect-error needs to be implemented
+        setSchemaConfig(backend.db.getSchemaConfig());
 
         const limits: Record<keyof typeof config, CollectionDataLimit> = {
           'root.request-log': {
@@ -211,6 +213,13 @@ export default async function task(
 
         const backend = await targetProblemBackends.drive;
 
+        // ? Prewarm shared memory
+        await getClient({
+          MONGODB_URI: getConfig(`${target}.mongodbUri`, 'string')
+        });
+
+        setSchemaConfig(backend.db.getSchemaConfig());
+
         const limits: Record<keyof typeof config, CollectionDataLimit> = {
           'root.request-log': {
             limit: { maxBytes: config['root.request-log'] }
@@ -295,6 +304,13 @@ export default async function task(
         ]);
 
         const backend = await targetProblemBackends.qoverflow;
+
+        // ? Prewarm shared memory
+        await getClient({
+          MONGODB_URI: getConfig(`${target}.mongodbUri`, 'string')
+        });
+
+        setSchemaConfig(backend.db.getSchemaConfig());
 
         const limits: Record<keyof typeof config, CollectionDataLimit> = {
           'root.request-log': {
@@ -470,11 +486,23 @@ export default async function task(
           }
         }
 
+        const totalSizeBytesString = stringifyBytes(totalSizeBytes, {
+          decimalPlaces: 1,
+          unit: 'mb'
+        });
+
+        const maxBytesString = stringifyBytes(maxBytes, {
+          decimalPlaces: 1,
+          unit: 'mb'
+        });
+
+        assert(totalSizeBytesString !== null && maxBytesString !== null);
+
         await pruneCollectionAtThreshold(
           foundThresholdId && thresholdId ? { _id: thresholdId } : null,
           deleteFn,
-          `${totalCount} pruned (${totalSizeBytes}b > ${maxBytes}b)`,
-          `${totalCount} pruned (${totalSizeBytes}b <= ${maxBytes}b)`
+          `${totalCount} pruned (${totalSizeBytesString} >= ${maxBytesString})`,
+          `${totalCount} pruned (${totalSizeBytesString} <= ${maxBytesString})`
         ).then(() => cursor.close());
 
         async function pruneCollectionAtThreshold(
@@ -501,9 +529,9 @@ export default async function task(
               ).deletedCount;
             }
 
-            subLog(`${deletedCount}/${pruneMessage}`);
+            subLog([LogTag.IF_NOT_QUIETED], `${deletedCount}/${pruneMessage}`);
           } else {
-            subLog(`0/${noPruneMessage}`);
+            subLog([LogTag.IF_NOT_QUIETED], `0/${noPruneMessage}`);
           }
         }
       })
@@ -514,37 +542,31 @@ export default async function task(
     target: ActualTargetProblem,
     expectedKeys: ExpectedKeys
   ): Record<ExpectedKeys[number], number> {
+    const configFullKey = `${target}.supportedTasks.prune-data.maxBytes`;
+
     const incomingConfig = getConfig<
       Record<ExpectedKeys[number], `${number}${string}b`>
-    >(`${target}.supportedTasks.prune-data`, (json) => {
+    >(configFullKey, (maxBytes) => {
+      // * If validation becomes any more complicated than what it is now, just
+      // * use ArkType instead.
+
       const expectedKeysSet = new Set(expectedKeys);
-      const hasMaxBytes = isPlainObject(json) && 'maxBytes' in json;
-      const configFullKey = `${target}.supportedTasks.prune-data.maxBytes`;
 
-      let config = undefined as Record<string, unknown> | undefined;
-
-      if (hasMaxBytes && isPlainObject(json.maxBytes)) {
-        const isValid = Object.entries(json.maxBytes).every(
-          ([k, v]) => expectedKeysSet.has(k) && typeof v === 'string' && v.endsWith('b')
+      const hasValidValues =
+        isRecord(maxBytes) &&
+        Object.entries(maxBytes).every(
+          ([_, v]) => typeof v === 'string' && v.endsWith('b')
         );
 
-        if (isValid) {
-          config = json.maxBytes;
-        }
-      }
-
-      if (!config) {
+      if (!hasValidValues) {
         return ErrorMessage.InvalidConfigFile(
           configFullKey,
           undefined,
-          'improperly structured (see documentation)'
+          'improperly structured (one or more invalid or non-byte string values)'
         );
       }
 
-      taskLog([LogTag.IF_NOT_HUSHED], 'Pruner configuration for %O:', target);
-      taskLog([LogTag.IF_NOT_HUSHED], config);
-
-      const currentKeys = new Set(Object.keys(config));
+      const currentKeys = new Set(Object.keys(maxBytes));
       const missingKeys = expectedKeysSet.difference(currentKeys);
       const extraKeys = currentKeys.difference(expectedKeysSet);
 
@@ -580,9 +602,5 @@ export default async function task(
 
     assert(bytesCount > 0, ErrorMessage.TooManyBytes(bytesCount, maxAllowedBytes));
     return finalConfig;
-  }
-
-  function isPlainObject(o: unknown): o is Record<string, unknown> {
-    return !!o && typeof o === 'object' && !Array.isArray(o);
   }
 }
