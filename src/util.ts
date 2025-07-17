@@ -237,6 +237,7 @@ export function withGlobalBuilder<CustomCliArguments extends GlobalCliArguments>
   ];
 }
 
+// ? Duplicated on purpose
 export function isRecord(o: unknown): o is Record<string, unknown> {
   return !!o && typeof o === 'object' && !Array.isArray(o);
 }

@@ -6,11 +6,17 @@
 import assert from 'node:assert';
 
 import { getDb, setSchemaConfig } from '@-xun/mongo-schema';
-import { runWithMongoSchemaMultitenancy } from '@-xun/mongo-schema/multitenant';
+
+import {
+  runWithMongoSchemaMultitenancy,
+  setupForcedMultitenancyOverride
+} from '@-xun/mongo-schema/multitenant';
+
 import { setDummyData } from '@-xun/mongo-test';
 import { createDebugLogger, createGenericLogger } from 'rejoinder';
 
 import { configureExecutionContext } from 'universe:configure.ts';
+import { globalDebuggerNamespace } from 'universe:constant.ts';
 import { ErrorMessage } from 'universe:error.ts';
 
 import type { ExecutionContext } from '@-xun/cli';
@@ -93,9 +99,13 @@ export async function makeGetConfig() {
  * Make and return a fake `TaskRunnerContext` instance.
  */
 export function makeTaskRunnerContext() {
-  const mockedListrLog = createGenericLogger({ namespace: 'dummy' });
-  const mockedStandardLog = createGenericLogger({ namespace: 'dummy' });
-  const mockedStandardDebug = createDebugLogger({ namespace: 'dummy' });
+  const mockedListrLog = createGenericLogger({ namespace: globalDebuggerNamespace });
+  const mockedStandardLog = createGenericLogger({ namespace: globalDebuggerNamespace });
+  const mockedStandardDebug = createDebugLogger({ namespace: globalDebuggerNamespace });
+
+  mockedListrLog.enabled = true;
+  mockedStandardLog.enabled = true;
+  mockedStandardDebug.enabled = true;
 
   return {
     mockedListrLog,
@@ -126,7 +136,8 @@ export function makeTaskRunnerContext() {
  * meant to be called within a `test`/`it` block.
  */
 export function makeSetupTestFunction<
-  const TaskConfig extends Record<string, JsonPrimitive>
+  const TaskConfig extends Record<string, JsonPrimitive>,
+  const TaskConfigIsCollections extends boolean = true
 >({
   target,
   initializeMemoryServerOverride,
@@ -135,12 +146,14 @@ export function makeSetupTestFunction<
   resetSharedMemory,
   schema,
   data,
-  taskConfig
+  taskConfig,
+  taskConfigIsCollections = true as TaskConfigIsCollections
 }: {
   target: string;
   schema: Functionable<DbSchema>;
   data: Functionable<DummyData>;
   taskConfig: TaskConfig;
+  taskConfigIsCollections?: TaskConfigIsCollections;
 } & Pick<
   ReturnType<typeof setupMemoryServerOverride>,
   | 'initializeMemoryServerOverride'
@@ -157,6 +170,7 @@ export function makeSetupTestFunction<
   afterEach(async () => {
     await runWithMongoSchemaMultitenancy(target, async () => {
       resetSharedMemory();
+      setupForcedMultitenancyOverride('multitenant');
       await killMemoryServerOverride();
     });
   });
@@ -167,9 +181,13 @@ export function makeSetupTestFunction<
     let result = {} as {
       getConfig: Awaited<ReturnType<typeof makeGetConfig>>;
       taskConfig: TaskConfig;
-      collectionsUnderTest: (keyof TaskConfig)[];
-      initialSizes: Record<keyof TaskConfig, number>;
-    } & ReturnType<typeof makeTaskRunnerContext>;
+    } & ReturnType<typeof makeTaskRunnerContext> &
+      (TaskConfigIsCollections extends true
+        ? {
+            collectionsUnderTest: (keyof TaskConfig)[];
+            initialSizes: Record<keyof TaskConfig, number>;
+          }
+        : { taskConfigKeys: (keyof TaskConfig)[] });
 
     await runWithMongoSchemaMultitenancy(target, async () => {
       setSchemaConfig(schema);
@@ -178,21 +196,23 @@ export function makeSetupTestFunction<
       await reinitializeServerDatabases();
 
       const getConfig = (() => taskConfig) as (typeof result)['getConfig'];
-      const collectionsUnderTest = Object.keys(taskConfig);
-      const initialSizes = (await getCollectionSize(collectionsUnderTest)) as Record<
-        keyof TaskConfig,
-        number
-      >;
-
+      const taskConfigKeys = Object.keys(taskConfig);
       const mockTaskRunnerContext = makeTaskRunnerContext();
 
       result = {
         getConfig,
         taskConfig,
-        collectionsUnderTest,
-        initialSizes,
-        ...mockTaskRunnerContext
-      };
+        ...mockTaskRunnerContext,
+        ...(taskConfigIsCollections
+          ? {
+              collectionsUnderTest: taskConfigKeys,
+              initialSizes: (await getCollectionSize(taskConfigKeys)) as Record<
+                keyof TaskConfig,
+                number
+              >
+            }
+          : { taskConfigKeys })
+      } as unknown as typeof result;
     });
 
     return result;

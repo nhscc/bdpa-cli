@@ -22,7 +22,6 @@ import {
 } from 'universe:constant.ts';
 
 import { ErrorMessage } from 'universe:error.ts';
-import { isRecord } from 'universe:util.ts';
 
 import type {
   BfeBuilderObject,
@@ -277,3 +276,8 @@ export const configureErrorHandlingEpilogue = async function (...args) {
   await closeClient({ clearCache: 'all-tenants' });
   await makeStandardConfigureErrorHandlingEpilogue()(...args);
 } as ConfigureErrorHandlingEpilogue<GlobalExecutionContext>;
+
+// ? Duplicated on purpose
+export function isRecord(o: unknown): o is Record<string, unknown> {
+  return !!o && typeof o === 'object' && !Array.isArray(o);
+}

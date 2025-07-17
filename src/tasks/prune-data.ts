@@ -231,7 +231,7 @@ export default async function task(
             limit: { maxBytes: config['app.users'] },
             async deleteFn(thresholdEntry) {
               const users = (
-                await getDb({ name: 'hscc-api-drive' })
+                await getDb({ name: 'app' })
               ).collection<QoverflowDb.InternalUser>('users');
 
               const usernames = (
@@ -248,7 +248,7 @@ export default async function task(
           'app.file-nodes': {
             limit: { maxBytes: config['app.file-nodes'] },
             async deleteFn(thresholdEntry) {
-              const db = await getDb({ name: 'hscc-api-drive' });
+              const db = await getDb({ name: 'app' });
 
               const fileNodes = db.collection<DriveDb.InternalNode>('file-nodes');
               const metaNodes = db.collection<DriveDb.InternalNode>('meta-nodes');
@@ -272,7 +272,7 @@ export default async function task(
           'app.meta-nodes': {
             limit: { maxBytes: config['app.meta-nodes'] },
             async deleteFn(thresholdEntry) {
-              const db = await getDb({ name: 'hscc-api-drive' });
+              const db = await getDb({ name: 'app' });
               const metaNodes = db.collection<DriveDb.InternalNode>('meta-nodes');
               const ids = (
                 await metaNodes.find({ _id: { $lte: thresholdEntry._id } }).toArray()
