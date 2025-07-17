@@ -296,7 +296,10 @@ export default async function task(
     const cursor = db.collection('request-log').aggregate(pipeline);
     await cursor.toArray();
 
-    return [db.collection('limited-log').estimatedDocumentCount(), cursor] as const;
+    return [
+      await db.collection('limited-log').estimatedDocumentCount(),
+      cursor
+    ] as const;
   }
 
   function getConfigFor(target: ActualTargetProblem) {
