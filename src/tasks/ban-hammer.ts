@@ -1,8 +1,14 @@
 import { LogTag } from '@-xun/cli/logging';
-import { getDb } from '@-xun/mongo-schema';
+import { getClient, getDb, setSchemaConfig } from '@-xun/mongo-schema';
 import { runWithMongoSchemaMultitenancy } from '@-xun/mongo-schema/multitenant';
 
-import { oneSecondInMs, TargetProblem, Task } from 'universe:constant.ts';
+import {
+  oneSecondInMs,
+  TargetProblem,
+  targetProblemBackends,
+  Task
+} from 'universe:constant.ts';
+
 import { ErrorMessage } from 'universe:error.ts';
 import { skipListrTask, waitForListr2OutputReady } from 'universe:util.ts';
 
@@ -10,8 +16,8 @@ import type { GlobalExecutionContext } from 'universe:configure.ts';
 import type { ActualTargetProblem } from 'universe:constant.ts';
 import type { TaskRunnerContext } from 'universe:util.ts';
 
-const fullPrettyName = 'ban hammer';
-const taskType = Task.BanHammer;
+export const fullPrettyName = 'ban hammer';
+export const taskType = Task.BanHammer;
 
 export default async function task(
   taskName: string,
@@ -26,7 +32,9 @@ export default async function task(
 
   await waitForListr2OutputReady(debug);
 
-  await runWithMongoSchemaMultitenancy(target, async () => {
+  await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
+    let backend;
+
     switch (target) {
       case TargetProblem.ElectionsCpl:
       case TargetProblem.ElectionsIrv:
@@ -41,8 +49,13 @@ export default async function task(
         return;
       }
 
-      case TargetProblem.Drive:
+      case TargetProblem.Drive: {
+        backend = await targetProblemBackends.drive;
+        break;
+      }
+
       case TargetProblem.Qoverflow: {
+        backend = await targetProblemBackends.qoverflow;
         break;
       }
 
@@ -51,8 +64,16 @@ export default async function task(
       }
     }
 
-    const bannedCount = await unleashBanHammer();
+    // ? Prewarm shared memory
+    await getClient({
+      MONGODB_URI: getConfig(`${target}.mongodbUri`, 'string')
+    });
 
+    setSchemaConfig(backend.db.getSchemaConfig());
+
+    const [bannedCount, cursor] = await unleashBanHammer();
+
+    await cursor.close();
     taskLog([LogTag.IF_NOT_QUIETED], '~%O clients are currently banned', bannedCount);
   });
 
@@ -273,11 +294,9 @@ export default async function task(
     debug('aggregation pipeline: %O', pipeline);
 
     const cursor = db.collection('request-log').aggregate(pipeline);
+    await cursor.toArray();
 
-    await cursor.next();
-    await cursor.close();
-
-    return db.collection('limited-log').estimatedDocumentCount();
+    return [db.collection('limited-log').estimatedDocumentCount(), cursor] as const;
   }
 
   function getConfigFor(target: ActualTargetProblem) {

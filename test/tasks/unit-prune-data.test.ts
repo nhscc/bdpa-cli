@@ -9,7 +9,7 @@ import { getDummyData as getDriveDummyData } from '@nhscc/backend-drive/dummy';
 import { getSchemaConfig as getQoverflowSchemaConfig } from '@nhscc/backend-qoverflow/db';
 import { getDummyData as getQoverflowDummyData } from '@nhscc/backend-qoverflow/dummy';
 
-import pruneData from 'universe:tasks/prune-data.ts';
+import pruneData, { taskType } from 'universe:tasks/prune-data.ts';
 
 import {
   getCollectionSize,
@@ -32,6 +32,7 @@ describe('target: drive', () => {
 
   const { setupTest } = makeSetupTestFunction({
     target,
+    taskType,
     initializeMemoryServerOverride,
     killMemoryServerOverride,
     reinitializeServerDatabases,
@@ -68,7 +69,7 @@ describe('target: drive', () => {
 
       await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-      await runWithMongoSchemaMultitenancy(target, async () => {
+      await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
         const actualSizesEntries = Object.entries(
           await getCollectionSize(collectionsUnderTest)
         );
@@ -96,7 +97,7 @@ describe('target: drive', () => {
 
       await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-      await runWithMongoSchemaMultitenancy(target, async () => {
+      await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
         const actualSizesEntries = Object.entries(
           await getCollectionSize(collectionsUnderTest)
         );
@@ -126,7 +127,7 @@ describe('target: drive', () => {
 
       await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-      await runWithMongoSchemaMultitenancy(target, async () => {
+      await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
         const actualSizesEntries = Object.entries(
           await getCollectionSize(collectionsUnderTest)
         );
@@ -152,6 +153,7 @@ describe('target: qoverflow', () => {
 
   const { setupTest } = makeSetupTestFunction({
     target,
+    taskType,
     initializeMemoryServerOverride,
     killMemoryServerOverride,
     reinitializeServerDatabases,
@@ -188,7 +190,7 @@ describe('target: qoverflow', () => {
 
       await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-      await runWithMongoSchemaMultitenancy(target, async () => {
+      await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
         const actualSizesEntries = Object.entries(
           await getCollectionSize(collectionsUnderTest)
         );
@@ -217,7 +219,7 @@ describe('target: qoverflow', () => {
 
       await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-      await runWithMongoSchemaMultitenancy(target, async () => {
+      await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
         const actualSizesEntries = Object.entries(
           await getCollectionSize(collectionsUnderTest)
         );
@@ -247,7 +249,7 @@ describe('target: qoverflow', () => {
 
       await pruneData('test', target, fakeGetConfig, taskRunnerContext);
 
-      await runWithMongoSchemaMultitenancy(target, async () => {
+      await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
         const actualSizesEntries = Object.entries(
           await getCollectionSize(collectionsUnderTest)
         );

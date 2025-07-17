@@ -140,6 +140,7 @@ export function makeSetupTestFunction<
   const TaskConfigIsCollections extends boolean = true
 >({
   target,
+  taskType,
   initializeMemoryServerOverride,
   killMemoryServerOverride,
   reinitializeServerDatabases,
@@ -150,6 +151,7 @@ export function makeSetupTestFunction<
   taskConfigIsCollections = true as TaskConfigIsCollections
 }: {
   target: string;
+  taskType: string;
   schema: Functionable<DbSchema>;
   data: Functionable<DummyData>;
   taskConfig: TaskConfig;
@@ -162,13 +164,13 @@ export function makeSetupTestFunction<
   | 'reinitializeServerDatabases'
 >) {
   beforeEach(async () => {
-    await runWithMongoSchemaMultitenancy(target, async () => {
+    await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
       await initializeMemoryServerOverride();
     });
   });
 
   afterEach(async () => {
-    await runWithMongoSchemaMultitenancy(target, async () => {
+    await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
       resetSharedMemory();
       setupForcedMultitenancyOverride('multitenant');
       await killMemoryServerOverride();
@@ -189,7 +191,7 @@ export function makeSetupTestFunction<
           }
         : { taskConfigKeys: (keyof TaskConfig)[] });
 
-    await runWithMongoSchemaMultitenancy(target, async () => {
+    await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
       setSchemaConfig(schema);
       setDummyData(data);
 

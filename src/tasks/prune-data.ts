@@ -17,8 +17,8 @@ import type { GlobalExecutionContext } from 'universe:configure.ts';
 import type { ActualTargetProblem } from 'universe:constant.ts';
 import type { TaskRunnerContext } from 'universe:util.ts';
 
-const fullPrettyName = 'prune data';
-const taskType = Task.PruneData;
+export const fullPrettyName = 'prune data';
+export const taskType = Task.PruneData;
 
 const maxAllowedBytes = parseBytes('450mb')!;
 
@@ -68,7 +68,7 @@ export default async function task(
 
   await waitForListr2OutputReady(debug);
 
-  await runWithMongoSchemaMultitenancy(target, async () => {
+  await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
     switch (target) {
       case TargetProblem.ElectionsCpl:
       case TargetProblem.ElectionsIrv:
