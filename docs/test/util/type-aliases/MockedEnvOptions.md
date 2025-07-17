@@ -8,7 +8,7 @@
 
 > **MockedEnvOptions** = `object`
 
-Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-env/dist/packages/test-mock-env/src/index.d.ts:5
+Defined in: node\_modules/@-xun/test-mock-env/dist/packages/test-mock-env/src/index.d.ts:5
 
 ## See
 
@@ -20,7 +20,7 @@ Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-env/dist/
 
 > `optional` **passthroughDebugEnv**: `boolean`
 
-Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-env/dist/packages/test-mock-env/src/index.d.ts:31
+Defined in: node\_modules/@-xun/test-mock-env/dist/packages/test-mock-env/src/index.d.ts:31
 
 If `true`, whenever `process.env.DEBUG` is present, it will be forwarded
 as-is to the underlying environment mock even when `replaceEntireEnv` is
@@ -38,7 +38,7 @@ true
 
 > `optional` **replaceEntireEnv**: `boolean`
 
-Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-env/dist/packages/test-mock-env/src/index.d.ts:23
+Defined in: node\_modules/@-xun/test-mock-env/dist/packages/test-mock-env/src/index.d.ts:23
 
 By default, all environment variables in the `process.env` object are
 deleted before the object is re-hydrated with `newEnv`.

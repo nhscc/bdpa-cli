@@ -8,7 +8,7 @@
 
 > **GenericMockFixtureFunction** = (...`args`) => [`GenericMockFixture`](GenericMockFixture.md)
 
-Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-fixture/dist/packages/test-mock-fixture/src/types/fixtures.d.ts:109
+Defined in: node\_modules/@-xun/test-mock-fixture/dist/packages/test-mock-fixture/src/types/fixtures.d.ts:109
 
 ## Parameters
 

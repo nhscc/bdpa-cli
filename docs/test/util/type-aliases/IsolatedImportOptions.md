@@ -8,7 +8,7 @@
 
 > **IsolatedImportOptions** = `object`
 
-Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-import/dist/packages/test-mock-import/src/index.d.ts:12
+Defined in: node\_modules/@-xun/test-mock-import/dist/packages/test-mock-import/src/index.d.ts:12
 
 ## See
 
@@ -20,7 +20,7 @@ Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-import/di
 
 > `optional` **reduceToDefault**: `boolean`
 
-Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-import/dist/packages/test-mock-import/src/index.d.ts:21
+Defined in: node\_modules/@-xun/test-mock-import/dist/packages/test-mock-import/src/index.d.ts:21
 
 By default, if `module.__esModule === true` and the only other property of
 `module.exports` is `"default"`, then said `"default"` export will be

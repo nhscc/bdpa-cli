@@ -8,7 +8,7 @@
 
 > **GenericMockFixtureFunctions** = readonly [`GenericMockFixtureFunction`](GenericMockFixtureFunction.md)[]
 
-Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-fixture/dist/packages/test-mock-fixture/src/types/fixtures.d.ts:113
+Defined in: node\_modules/@-xun/test-mock-fixture/dist/packages/test-mock-fixture/src/types/fixtures.d.ts:113
 
 ## See
 

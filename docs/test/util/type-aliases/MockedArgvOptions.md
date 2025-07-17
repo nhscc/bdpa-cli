@@ -8,7 +8,7 @@
 
 > **MockedArgvOptions** = `object`
 
-Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-argv/dist/packages/test-mock-argv/src/index.d.ts:5
+Defined in: node\_modules/@-xun/test-mock-argv/dist/packages/test-mock-argv/src/index.d.ts:5
 
 ## See
 
@@ -20,7 +20,7 @@ Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-argv/dist
 
 > `optional` **replaceEntireArgv**: `boolean`
 
-Defined in: node\_modules/@-xun/symbiote/node\_modules/@-xun/test-mock-argv/dist/packages/test-mock-argv/src/index.d.ts:13
+Defined in: node\_modules/@-xun/test-mock-argv/dist/packages/test-mock-argv/src/index.d.ts:13
 
 By default, the first two elements in `process.argv` are preserved. Setting
 `replace` to `true` will cause the entire process.argv array to be

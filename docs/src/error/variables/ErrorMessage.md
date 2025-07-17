@@ -8,65 +8,43 @@
 
 > `const` **ErrorMessage**: `object`
 
-Defined in: [src/error.ts:8](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/error.ts#L8)
+Defined in: [src/error.ts:8](https://github.com/nhscc/bdpa-cli/blob/c94db553ec39d857ac60551d2e8f859ed5e499b8/src/error.ts#L8)
 
 A collection of possible error and warning messages.
 
 ## Type declaration
 
-### BadOptionValue()
+### GuruMeditation()
 
-> **BadOptionValue**(`name`, `value`, `context?`): `string`
+> **GuruMeditation**: () => `string` = `UpstreamErrorMessage.GuruMeditation`
 
-#### Parameters
-
-##### name
+#### Returns
 
 `string`
 
-##### value
+### InvalidBytes()
+
+> **InvalidBytes**(`bytes`): `string`
+
+#### Parameters
+
+##### bytes
 
 `unknown`
 
-##### context?
-
-`string`
-
 #### Returns
 
 `string`
 
-### CommandDidNotComplete()
+### InvalidCollectionSizeInput()
 
-> **CommandDidNotComplete**(`command`): `string`
+> **InvalidCollectionSizeInput**(`dbCollection`): `string`
 
 #### Parameters
 
-##### command
+##### dbCollection
 
 `string`
-
-#### Returns
-
-`string`
-
-### GuruMeditation()
-
-> **GuruMeditation**(): `string`
-
-#### Returns
-
-`string`
-
-### IgnoredOptions()
-
-> **IgnoredOptions**(`args`): `string`
-
-#### Parameters
-
-##### args
-
-`string`[]
 
 #### Returns
 
@@ -84,11 +62,47 @@ A collection of possible error and warning messages.
 
 ##### path
 
-`string`
+`undefined` | `string`
 
 ##### problem
 
 `undefined` | `string`
+
+#### Returns
+
+`string`
+
+### TooManyBytes()
+
+> **TooManyBytes**(`bytes`, `maxBytes`): `string`
+
+#### Parameters
+
+##### bytes
+
+`number`
+
+##### maxBytes
+
+`number`
+
+#### Returns
+
+`string`
+
+### UnexpectedValue()
+
+> **UnexpectedValue**(`expectation`, `actual`): `string`
+
+#### Parameters
+
+##### expectation
+
+`string`
+
+##### actual
+
+`unknown`
 
 #### Returns
 
@@ -111,14 +125,6 @@ A collection of possible error and warning messages.
 ##### path
 
 `string`
-
-#### Returns
-
-`string`
-
-### UnsupportedCommand()
-
-> **UnsupportedCommand**(): `string`
 
 #### Returns
 

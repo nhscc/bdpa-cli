@@ -2,15 +2,15 @@
 
 ***
 
-[@nhscc/bdpa-cli](../../../README.md) / [src/constant](../README.md) / TargetYear
+[@nhscc/bdpa-cli](../../../README.md) / [src/constant](../README.md) / targetYears
 
-# Variable: TargetYear
+# Variable: targetYears
 
-> `const` **TargetYear**: `object`
+> `const` **targetYears**: `object`
 
-Defined in: [src/constant.ts:51](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/constant.ts#L51)
+Defined in: [src/constant.ts:136](https://github.com/nhscc/bdpa-cli/blob/c94db553ec39d857ac60551d2e8f859ed5e499b8/src/constant.ts#L136)
 
-The HSCC MongoDB Atlas APIs organized by problem statement release year.
+Available HSCC cloud services organized by problem statement release year.
 
 Per-year syntax is: `[sample problem statement, actual problem statement]`
 
@@ -42,8 +42,8 @@ Per-year syntax is: `[sample problem statement, actual problem statement]`
 
 ### 2025
 
-> `readonly` **2025**: readonly \[`"drive"`, `"bdpaoverflow"`\]
+> `readonly` **2025**: readonly \[`"drive"`, `"qoverflow"`\]
 
 ## See
 
-[TargetDatabase](TargetDatabase.md), [TargetProblem](TargetProblem.md)
+[TargetProblem](TargetProblem.md)

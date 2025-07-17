@@ -6,9 +6,15 @@
 
 # Type Alias: InitialTaskRunnerContext\<ListrContext\>
 
-> **InitialTaskRunnerContext**\<`ListrContext`\> = `Omit`\<[`TaskRunnerContext`](TaskRunnerContext.md)\<`ListrContext`\>, `` `listr${string}` ``\>
+> **InitialTaskRunnerContext**\<`ListrContext`\> = `Omit`\<[`TaskRunnerContext`](TaskRunnerContext.md)\<`ListrContext`\>, `` `listr${string}` ``\> & `object`
 
-Defined in: [src/util.ts:31](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/util.ts#L31)
+Defined in: [src/util.ts:33](https://github.com/nhscc/bdpa-cli/blob/c94db553ec39d857ac60551d2e8f859ed5e499b8/src/util.ts#L33)
+
+## Type declaration
+
+### loggerNamespace
+
+> **loggerNamespace**: `string`
 
 ## Type Parameters
 

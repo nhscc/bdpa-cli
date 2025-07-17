@@ -6,6 +6,10 @@
 
 # src/tasks/prune-data
 
+## Type Aliases
+
+- [CollectionDataLimit](type-aliases/CollectionDataLimit.md)
+
 ## Functions
 
 - [default](functions/default.md)

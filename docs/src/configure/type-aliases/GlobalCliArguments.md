@@ -8,7 +8,7 @@
 
 > **GlobalCliArguments** = `StandardCommonCliArguments` & `object`
 
-Defined in: [src/configure.ts:84](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/configure.ts#L84)
+Defined in: [src/configure.ts:86](https://github.com/nhscc/bdpa-cli/blob/c94db553ec39d857ac60551d2e8f859ed5e499b8/src/configure.ts#L86)
 
 These properties will be available in the `argv` object of any command that
 uses [withGlobalBuilder](../../util/functions/withGlobalBuilder.md) to construct its `builder`.

@@ -15,10 +15,12 @@
 ## Variables
 
 - [$executionContext](variables/$executionContext.md)
-- [configureErrorHandlingEpilogue](variables/configureErrorHandlingEpilogue.md)
 - [globalCliArguments](variables/globalCliArguments.md)
 
 ## Functions
 
+- [configureErrorHandlingEpilogue](functions/configureErrorHandlingEpilogue.md)
 - [configureExecutionContext](functions/configureExecutionContext.md)
+- [configureExecutionEpilogue](functions/configureExecutionEpilogue.md)
 - [getWellKnownConfigPath](functions/getWellKnownConfigPath.md)
+- [isRecord](functions/isRecord.md)

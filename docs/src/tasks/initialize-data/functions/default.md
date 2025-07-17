@@ -6,15 +6,19 @@
 
 # Function: default()
 
-> **default**(`target`, `getConfig`, `__namedParameters`): `Promise`\<`void`\>
+> **default**(`taskName`, `target`, `getConfig`, `__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [src/tasks/initialize-data.ts:5](https://github.com/nhscc/bdpa-cli/blob/8ad58c8c8508bf539936ccdd28c6f77ce4493fea/src/tasks/initialize-data.ts#L5)
+Defined in: [src/tasks/initialize-data.ts:11](https://github.com/nhscc/bdpa-cli/blob/c94db553ec39d857ac60551d2e8f859ed5e499b8/src/tasks/initialize-data.ts#L11)
 
 ## Parameters
 
+### taskName
+
+`string`
+
 ### target
 
-`"all"` | `"elections"` | `"airports"` | `"barker"` | `"ghostmeme"` | `"drive"` | `"qoverflow"` | `"blogpress"` | `"inbdpa"` | `"elections-irv"` | `"elections-cpl"` | `"bdpaoverflow"`
+[`ActualTargetProblem`](../../../constant/type-aliases/ActualTargetProblem.md)
 
 ### getConfig
 

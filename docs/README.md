@@ -8,10 +8,13 @@
 
 - [src/cli](src/cli/README.md)
 - [src/commands](src/commands/README.md)
+- [src/commands/keys](src/commands/keys/README.md)
 - [src/commands/stats](src/commands/stats/README.md)
+- [src/commands/workspaces](src/commands/workspaces/README.md)
 - [src/configure](src/configure/README.md)
 - [src/constant](src/constant/README.md)
 - [src/error](src/error/README.md)
+- [src/tasks/backup-data](src/tasks/backup-data/README.md)
 - [src/tasks/ban-hammer](src/tasks/ban-hammer/README.md)
 - [src/tasks/initialize-data](src/tasks/initialize-data/README.md)
 - [src/tasks/prune-data](src/tasks/prune-data/README.md)

@@ -6,17 +6,9 @@
 
 # src/commands
 
-## Enumerations
-
-- [Task](enumerations/Task.md)
-
 ## Type Aliases
 
 - [CustomCliArguments](type-aliases/CustomCliArguments.md)
-
-## Variables
-
-- [tasks](variables/tasks.md)
 
 ## Functions
 
