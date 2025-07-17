@@ -8,6 +8,6 @@
 
 > **default**: `RunProgramReturnType`\<[`GlobalExecutionContext`](../../configure/type-aliases/GlobalExecutionContext.md)\>
 
-Defined in: [src/cli.ts:11](https://github.com/nhscc/bdpa-cli/blob/cc06230b8b3c4bd28c3da1903ce886e7c819a1ce/src/cli.ts#L11)
+Defined in: [src/cli.ts:11](https://github.com/nhscc/bdpa-cli/blob/c8a325cdd3d6bbbd34604fbd2249eb233fe4776a/src/cli.ts#L11)
 
 This is the simple CLI entry point executed directly by node.

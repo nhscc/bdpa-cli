@@ -8,7 +8,7 @@
 
 > **default**(`__namedParameters`): `ChildConfiguration`\<[`CustomCliArguments`](../type-aliases/CustomCliArguments.md), [`GlobalExecutionContext`](../../../configure/type-aliases/GlobalExecutionContext.md)\>
 
-Defined in: [src/commands/stats.ts:11](https://github.com/nhscc/bdpa-cli/blob/cc06230b8b3c4bd28c3da1903ce886e7c819a1ce/src/commands/stats.ts#L11)
+Defined in: [src/commands/stats.ts:11](https://github.com/nhscc/bdpa-cli/blob/c8a325cdd3d6bbbd34604fbd2249eb233fe4776a/src/commands/stats.ts#L11)
 
 ## Parameters
 

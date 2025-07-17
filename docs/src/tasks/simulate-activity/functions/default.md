@@ -8,7 +8,7 @@
 
 > **default**(`taskName`, `target`, `getConfig`, `__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [src/tasks/simulate-activity.ts:11](https://github.com/nhscc/bdpa-cli/blob/cc06230b8b3c4bd28c3da1903ce886e7c819a1ce/src/tasks/simulate-activity.ts#L11)
+Defined in: [src/tasks/simulate-activity.ts:11](https://github.com/nhscc/bdpa-cli/blob/c8a325cdd3d6bbbd34604fbd2249eb233fe4776a/src/tasks/simulate-activity.ts#L11)
 
 ## Parameters
 

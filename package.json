@@ -1,6 +1,6 @@
 {
   "name": "@nhscc/bdpa-cli",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A CLI tool for managing NHSCC cloud resources",
   "homepage": "https://github.com/nhscc/bdpa-cli#readme",
   "bugs": {

@@ -8,7 +8,7 @@
 
 > **CollectionDataLimit** = `object`
 
-Defined in: [src/tasks/prune-data.ts:30](https://github.com/nhscc/bdpa-cli/blob/cc06230b8b3c4bd28c3da1903ce886e7c819a1ce/src/tasks/prune-data.ts#L30)
+Defined in: [src/tasks/prune-data.ts:30](https://github.com/nhscc/bdpa-cli/blob/c8a325cdd3d6bbbd34604fbd2249eb233fe4776a/src/tasks/prune-data.ts#L30)
 
 An object describing the maximum number of bytes a collection's documents may
 occupy, along with strategies for deleting said documents when they grow too
@@ -20,7 +20,7 @@ numerous.
 
 > `optional` **deleteFn**: (`thresholdEntry`) => `Promisable`\<`number`\>
 
-Defined in: [src/tasks/prune-data.ts:50](https://github.com/nhscc/bdpa-cli/blob/cc06230b8b3c4bd28c3da1903ce886e7c819a1ce/src/tasks/prune-data.ts#L50)
+Defined in: [src/tasks/prune-data.ts:50](https://github.com/nhscc/bdpa-cli/blob/c8a325cdd3d6bbbd34604fbd2249eb233fe4776a/src/tasks/prune-data.ts#L50)
 
 By default, documents are unceremoniously deleted from the collection
 without care for referential integrity. Use this function when deletions
@@ -43,7 +43,7 @@ library function.
 
 > **limit**: `object`
 
-Defined in: [src/tasks/prune-data.ts:34](https://github.com/nhscc/bdpa-cli/blob/cc06230b8b3c4bd28c3da1903ce886e7c819a1ce/src/tasks/prune-data.ts#L34)
+Defined in: [src/tasks/prune-data.ts:34](https://github.com/nhscc/bdpa-cli/blob/c8a325cdd3d6bbbd34604fbd2249eb233fe4776a/src/tasks/prune-data.ts#L34)
 
 Maximum number of bytes documents in this collection can use.
 
@@ -57,7 +57,7 @@ Maximum number of bytes documents in this collection can use.
 
 > `optional` **orderBy**: `string`
 
-Defined in: [src/tasks/prune-data.ts:43](https://github.com/nhscc/bdpa-cli/blob/cc06230b8b3c4bd28c3da1903ce886e7c819a1ce/src/tasks/prune-data.ts#L43)
+Defined in: [src/tasks/prune-data.ts:43](https://github.com/nhscc/bdpa-cli/blob/c8a325cdd3d6bbbd34604fbd2249eb233fe4776a/src/tasks/prune-data.ts#L43)
 
 When deleting documents that violate `limit`, oldest documents are deleted
 first by default. `orderBy` is the name of the document property to sort by
