@@ -8,7 +8,7 @@
 
 > **getWellKnownConfigPath**(): `Promise`\<`string`\>
 
-Defined in: [src/configure.ts:93](https://github.com/nhscc/bdpa-cli/blob/c94db553ec39d857ac60551d2e8f859ed5e499b8/src/configure.ts#L93)
+Defined in: [src/configure.ts:93](https://github.com/nhscc/bdpa-cli/blob/cc06230b8b3c4bd28c3da1903ce886e7c819a1ce/src/configure.ts#L93)
 
 Returns a well-known configuration path.
 

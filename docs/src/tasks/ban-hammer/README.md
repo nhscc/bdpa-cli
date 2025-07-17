@@ -6,6 +6,11 @@
 
 # src/tasks/ban-hammer
 
+## Variables
+
+- [fullPrettyName](variables/fullPrettyName.md)
+- [taskType](variables/taskType.md)
+
 ## Functions
 
 - [default](functions/default.md)

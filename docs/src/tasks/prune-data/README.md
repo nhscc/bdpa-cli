@@ -10,6 +10,11 @@
 
 - [CollectionDataLimit](type-aliases/CollectionDataLimit.md)
 
+## Variables
+
+- [fullPrettyName](variables/fullPrettyName.md)
+- [taskType](variables/taskType.md)
+
 ## Functions
 
 - [default](functions/default.md)

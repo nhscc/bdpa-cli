@@ -10,7 +10,7 @@
 
 > **getCollectionSize**(`collection`): `Promise`\<`number`\>
 
-Defined in: [test/util.ts:46](https://github.com/nhscc/bdpa-cli/blob/c94db553ec39d857ac60551d2e8f859ed5e499b8/test/util.ts#L46)
+Defined in: [test/util.ts:46](https://github.com/nhscc/bdpa-cli/blob/cc06230b8b3c4bd28c3da1903ce886e7c819a1ce/test/util.ts#L46)
 
 Accepts one or more database and collection names in the form
 `database.collection` and returns the size of each collection in bytes.
@@ -29,7 +29,7 @@ Accepts one or more database and collection names in the form
 
 > **getCollectionSize**(`collections`): `Promise`\<`Record`\<`string`, `number`\>\>
 
-Defined in: [test/util.ts:47](https://github.com/nhscc/bdpa-cli/blob/c94db553ec39d857ac60551d2e8f859ed5e499b8/test/util.ts#L47)
+Defined in: [test/util.ts:47](https://github.com/nhscc/bdpa-cli/blob/cc06230b8b3c4bd28c3da1903ce886e7c819a1ce/test/util.ts#L47)
 
 Accepts one or more database and collection names in the form
 `database.collection` and returns the size of each collection in bytes.
