@@ -8,4 +8,4 @@
 
 > `const` **taskType**: `"ban"` = `Task.BanHammer`
 
-Defined in: [src/tasks/ban-hammer.ts:20](https://github.com/nhscc/bdpa-cli/blob/c8a325cdd3d6bbbd34604fbd2249eb233fe4776a/src/tasks/ban-hammer.ts#L20)
+Defined in: [src/tasks/ban-hammer.ts:20](https://github.com/nhscc/bdpa-cli/blob/ff937d5fa5de96938ab72f8ce38af693e479fb18/src/tasks/ban-hammer.ts#L20)

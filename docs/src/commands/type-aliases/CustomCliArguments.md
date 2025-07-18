@@ -8,7 +8,7 @@
 
 > **CustomCliArguments** = [`GlobalCliArguments`](../../configure/type-aliases/GlobalCliArguments.md) & `object`
 
-Defined in: [src/commands/index.ts:38](https://github.com/nhscc/bdpa-cli/blob/c8a325cdd3d6bbbd34604fbd2249eb233fe4776a/src/commands/index.ts#L38)
+Defined in: [src/commands/index.ts:38](https://github.com/nhscc/bdpa-cli/blob/ff937d5fa5de96938ab72f8ce38af693e479fb18/src/commands/index.ts#L38)
 
 ## Type declaration
 
