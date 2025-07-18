@@ -444,7 +444,7 @@ export default async function task(
 
         debug('collection %O is a target for pruning', name);
 
-        const subLog = taskLog.extend(target).extend(name);
+        const subLog = taskLog.extend(name);
         const collection = db.collection(collectionName);
         const totalCount = await collection.countDocuments();
 
