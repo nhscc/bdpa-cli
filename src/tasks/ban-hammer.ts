@@ -158,13 +158,14 @@ export default async function task(
           ]
         }
       },
-      {
+      /* {
         $lookup: {
           from: 'request-log',
           as: 'ipBased',
           pipeline: [
             {
               $match: {
+                header: { $ne: null },
                 $expr: {
                   $gte: ['$createdAt', { $subtract: [NOW, calledEveryMs] }]
                 }
@@ -203,7 +204,7 @@ export default async function task(
             }
           ]
         }
-      },
+      }, */
       {
         $lookup: {
           from: 'limited-log',
@@ -231,7 +232,7 @@ export default async function task(
       },
       {
         $project: {
-          union: { $concatArrays: ['$headerBased', '$ipBased', '$previous'] }
+          union: { $concatArrays: ['$headerBased' /* , '$ipBased' */, '$previous'] }
         }
       },
       {
@@ -248,7 +249,7 @@ export default async function task(
       {
         $group: {
           _id: {
-            ip: '$ip',
+            /* ip: '$ip', */
             header: '$header'
           },
           count: {
@@ -276,7 +277,7 @@ export default async function task(
               else: '$until'
             }
           },
-          ip: '$_id.ip',
+          /* ip: '$_id.ip', */
           header: '$_id.header'
         }
       },

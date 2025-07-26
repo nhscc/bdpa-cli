@@ -73,7 +73,7 @@ describe(`target: drive`, () => {
     taskConfig
   });
 
-  it('rate limits clients that exceed max requests per window by ip and header', async () => {
+  it('rate limits clients that exceed max requests per window by header but not by ip', async () => {
     expect.hasAssertions();
 
     const { taskRunnerContext } = await setupTest();
@@ -87,10 +87,14 @@ describe(`target: drive`, () => {
 
         await logDb.updateMany({}, { $set: { createdAt: now } });
 
+        await expect(logDb.countDocuments({ ip: '1.2.3.4' })).resolves.toBeGreaterThan(
+          10
+        );
+
         await unleashBanHammer('test', target, makeGetConfig(), taskRunnerContext);
 
         await expect(getRateLimits()).resolves.toIncludeSameMembers([
-          { ip: '1.2.3.4' },
+          /* { ip: '1.2.3.4' }, */
           { header: `bearer ${BANNED_BEARER_TOKEN}` }
         ]);
 
@@ -182,7 +186,7 @@ describe(`target: drive`, () => {
   //   });
   // });
 
-  it('rate limits multiple ips that exceed max requests per window', async () => {
+  it('rate limits headers but not multiple ips that exceed max requests per window', async () => {
     expect.hasAssertions();
 
     const { taskRunnerContext } = await setupTest();
@@ -201,12 +205,20 @@ describe(`target: drive`, () => {
           { $set: { ip: '9.8.7.6' } }
         );
 
+        await expect(logDb.countDocuments({ ip: '1.2.3.4' })).resolves.toBeGreaterThan(
+          10
+        );
+
+        await expect(logDb.countDocuments({ ip: '9.8.7.6' })).resolves.toBeGreaterThan(
+          10
+        );
+
         await unleashBanHammer('test', target, makeGetConfig(), taskRunnerContext);
         expect(nodeLogSpy).toHaveBeenCalledTimes(1);
 
         await expect(getRateLimits()).resolves.toIncludeSameMembers([
-          { ip: '1.2.3.4' },
-          { ip: '9.8.7.6' },
+          /* { ip: '1.2.3.4' },
+          { ip: '9.8.7.6' }, */
           { header: `bearer ${BANNED_BEARER_TOKEN}` }
         ]);
       });
@@ -279,6 +291,14 @@ describe(`target: drive`, () => {
 
         await expect(getRateLimits()).resolves.toBeArrayOfSize(0);
 
+        await expect(logDb.countDocuments({ ip: '1.2.3.4' })).resolves.toBeGreaterThan(
+          10
+        );
+
+        await expect(logDb.countDocuments({ ip: '9.8.7.6' })).resolves.toBeGreaterThan(
+          10
+        );
+
         await unleashBanHammer(
           'test',
           target,
@@ -290,9 +310,9 @@ describe(`target: drive`, () => {
         );
 
         await expect(getRateLimits()).resolves.toIncludeSameMembers([
-          { header: `bearer ${BANNED_BEARER_TOKEN}` },
-          { ip: '9.8.7.6' },
-          { ip: '1.2.3.4' }
+          { header: `bearer ${BANNED_BEARER_TOKEN}` }
+          /* { ip: '9.8.7.6' },
+          { ip: '1.2.3.4' } */
         ]);
       });
 
@@ -330,7 +350,7 @@ describe(`target: drive`, () => {
 
         {
           const untils = await getRateLimitUntils();
-          expect(untils).toBeArrayOfSize(3);
+          expect(untils).toBeArrayOfSize(1);
 
           untils.forEach((u) => {
             expect({
@@ -364,7 +384,7 @@ describe(`target: drive`, () => {
 
         {
           const untils = await getRateLimitUntils();
-          expect(untils).toBeArrayOfSize(3);
+          expect(untils).toBeArrayOfSize(1);
 
           untils.forEach((u) => {
             expect({
@@ -396,7 +416,7 @@ describe(`target: drive`, () => {
 
         {
           const untils = await getRateLimitUntils();
-          expect(untils).toBeArrayOfSize(3);
+          expect(untils).toBeArrayOfSize(1);
 
           untils.forEach((u) => {
             expect({
@@ -430,7 +450,7 @@ describe(`target: drive`, () => {
       await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
         const limitDb = await getRateLimitsCollection();
 
-        await expect(getRateLimits()).resolves.toBeArrayOfSize(3);
+        await expect(getRateLimits()).resolves.toBeArrayOfSize(2);
 
         await limitDb.updateMany(
           { ip: { $ne: '5.6.7.8' } },
@@ -463,14 +483,16 @@ describe(`target: drive`, () => {
 
         await logDb.updateMany({}, { $set: { createdAt: now } });
 
-        await expect(getRateLimits()).resolves.toBeArrayOfSize(3);
+        await expect(getRateLimits()).resolves.toBeArrayOfSize(2);
 
-        await limitDb.updateMany({ ip: '5.6.7.8' }, { $set: { until: 0 } });
+        await limitDb.updateMany(
+          { header: `bearer another-banned-token` },
+          { $set: { until: 123_456 } }
+        );
 
         await unleashBanHammer('test', target, makeGetConfig(), taskRunnerContext);
 
         await expect(getRateLimits()).resolves.toIncludeSameMembers([
-          { ip: '1.2.3.4' },
           { header: `bearer ${BANNED_BEARER_TOKEN}` }
         ]);
       });
@@ -496,7 +518,7 @@ describe(`target: qoverflow`, () => {
     taskConfig
   });
 
-  it('rate limits clients that exceed max requests per window by ip and header', async () => {
+  it('rate limits clients that exceed max requests per window by header but not by ip', async () => {
     expect.hasAssertions();
 
     const { taskRunnerContext } = await setupTest();
@@ -510,10 +532,14 @@ describe(`target: qoverflow`, () => {
 
         await logDb.updateMany({}, { $set: { createdAt: now } });
 
+        await expect(logDb.countDocuments({ ip: '1.2.3.4' })).resolves.toBeGreaterThan(
+          10
+        );
+
         await unleashBanHammer('test', target, makeGetConfig(), taskRunnerContext);
 
         await expect(getRateLimits()).resolves.toIncludeSameMembers([
-          { ip: '1.2.3.4' },
+          /* { ip: '1.2.3.4' }, */
           { header: `bearer ${BANNED_BEARER_TOKEN}` }
         ]);
 
@@ -605,7 +631,7 @@ describe(`target: qoverflow`, () => {
   //   });
   // });
 
-  it('rate limits multiple ips that exceed max requests per window', async () => {
+  it('rate limits headers but not multiple ips that exceed max requests per window', async () => {
     expect.hasAssertions();
 
     const { taskRunnerContext } = await setupTest();
@@ -624,12 +650,20 @@ describe(`target: qoverflow`, () => {
           { $set: { ip: '9.8.7.6' } }
         );
 
+        await expect(logDb.countDocuments({ ip: '1.2.3.4' })).resolves.toBeGreaterThan(
+          10
+        );
+
+        await expect(logDb.countDocuments({ ip: '9.8.7.6' })).resolves.toBeGreaterThan(
+          10
+        );
+
         await unleashBanHammer('test', target, makeGetConfig(), taskRunnerContext);
         expect(nodeLogSpy).toHaveBeenCalledTimes(1);
 
         await expect(getRateLimits()).resolves.toIncludeSameMembers([
-          { ip: '1.2.3.4' },
-          { ip: '9.8.7.6' },
+          /* { ip: '1.2.3.4' },
+          { ip: '9.8.7.6' }, */
           { header: `bearer ${BANNED_BEARER_TOKEN}` }
         ]);
       });
@@ -702,6 +736,14 @@ describe(`target: qoverflow`, () => {
 
         await expect(getRateLimits()).resolves.toBeArrayOfSize(0);
 
+        await expect(logDb.countDocuments({ ip: '1.2.3.4' })).resolves.toBeGreaterThan(
+          10
+        );
+
+        await expect(logDb.countDocuments({ ip: '9.8.7.6' })).resolves.toBeGreaterThan(
+          10
+        );
+
         await unleashBanHammer(
           'test',
           target,
@@ -713,9 +755,9 @@ describe(`target: qoverflow`, () => {
         );
 
         await expect(getRateLimits()).resolves.toIncludeSameMembers([
-          { header: `bearer ${BANNED_BEARER_TOKEN}` },
-          { ip: '9.8.7.6' },
-          { ip: '1.2.3.4' }
+          { header: `bearer ${BANNED_BEARER_TOKEN}` }
+          /* { ip: '9.8.7.6' },
+          { ip: '1.2.3.4' } */
         ]);
       });
 
@@ -753,7 +795,7 @@ describe(`target: qoverflow`, () => {
 
         {
           const untils = await getRateLimitUntils();
-          expect(untils).toBeArrayOfSize(3);
+          expect(untils).toBeArrayOfSize(1);
 
           untils.forEach((u) => {
             expect({
@@ -787,7 +829,7 @@ describe(`target: qoverflow`, () => {
 
         {
           const untils = await getRateLimitUntils();
-          expect(untils).toBeArrayOfSize(3);
+          expect(untils).toBeArrayOfSize(1);
 
           untils.forEach((u) => {
             expect({
@@ -819,7 +861,7 @@ describe(`target: qoverflow`, () => {
 
         {
           const untils = await getRateLimitUntils();
-          expect(untils).toBeArrayOfSize(3);
+          expect(untils).toBeArrayOfSize(1);
 
           untils.forEach((u) => {
             expect({
@@ -853,7 +895,7 @@ describe(`target: qoverflow`, () => {
       await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
         const limitDb = await getRateLimitsCollection();
 
-        await expect(getRateLimits()).resolves.toBeArrayOfSize(3);
+        await expect(getRateLimits()).resolves.toBeArrayOfSize(2);
 
         await limitDb.updateMany(
           { ip: { $ne: '5.6.7.8' } },
@@ -886,14 +928,16 @@ describe(`target: qoverflow`, () => {
 
         await logDb.updateMany({}, { $set: { createdAt: now } });
 
-        await expect(getRateLimits()).resolves.toBeArrayOfSize(3);
+        await expect(getRateLimits()).resolves.toBeArrayOfSize(2);
 
-        await limitDb.updateMany({ ip: '5.6.7.8' }, { $set: { until: 0 } });
+        await limitDb.updateMany(
+          { header: `bearer another-banned-token` },
+          { $set: { until: 123_456 } }
+        );
 
         await unleashBanHammer('test', target, makeGetConfig(), taskRunnerContext);
 
         await expect(getRateLimits()).resolves.toIncludeSameMembers([
-          { ip: '1.2.3.4' },
           { header: `bearer ${BANNED_BEARER_TOKEN}` }
         ]);
       });
