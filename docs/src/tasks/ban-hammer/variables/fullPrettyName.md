@@ -8,4 +8,4 @@
 
 > `const` **fullPrettyName**: `"ban hammer"` = `'ban hammer'`
 
-Defined in: [src/tasks/ban-hammer.ts:19](https://github.com/nhscc/bdpa-cli/blob/ff937d5fa5de96938ab72f8ce38af693e479fb18/src/tasks/ban-hammer.ts#L19)
+Defined in: [src/tasks/ban-hammer.ts:19](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/tasks/ban-hammer.ts#L19)
