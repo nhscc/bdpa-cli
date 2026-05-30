@@ -39,7 +39,6 @@ export default async function task(
       case TargetProblem.ElectionsCpl:
       case TargetProblem.ElectionsIrv:
       case TargetProblem.Elections:
-      case TargetProblem.Airports:
       case TargetProblem.Barker:
       case TargetProblem.Ghostmeme:
       case TargetProblem.Blogpress:
@@ -47,6 +46,11 @@ export default async function task(
         skipListrTask(fullPrettyName, debug, listrTask);
         // TODO: unskip this task when required @nhscc/backend-X package exists
         return;
+      }
+
+      case TargetProblem.Airports: {
+        backend = await targetProblemBackends.airports;
+        break;
       }
 
       case TargetProblem.Drive: {
@@ -335,7 +339,7 @@ export default async function task(
           ErrorMessage.InvalidConfigFile(
             key,
             undefined,
-            ErrorMessage.UnexpectedValue('greater than zero', value)
+            ErrorMessage.UnexpectedValue(ErrorMessage.expectations.GreaterThan(0), value)
           )
         );
       }

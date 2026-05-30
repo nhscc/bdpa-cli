@@ -27,10 +27,61 @@ export const ErrorMessage = {
       }` + (problem === undefined ? '' : `\n\nProblem: ${problem}`)
     );
   },
-  UnimplementedTasks() {
-    return `one or more of the given tasks have not been properly implemented by the developer`;
-  },
   UnexpectedValue(expectation: string, actual: unknown) {
-    return `expected value${expectation}; saw instead: "${String(actual)}"`;
+    return `expected value ${expectation}; saw instead: "${String(actual)}"`;
+  },
+  UnimplementedTasks() {
+    return 'one or more of the given tasks have not been properly implemented by the developer';
+  },
+  BadInfoDb() {
+    return 'expected info db first entry to be non-null';
+  },
+  LessThanTwoAirportsOrAirlines() {
+    return 'cannot generate flights without at least two airports and airlines';
+  },
+  IteratorRanOutOfElements() {
+    return 'an iterable ran out of elements to iterate over';
+  },
+  MissingStochasticState() {
+    return 'expected stochastic state to exist';
+  },
+  ImpossibleStochasticState(stage: number) {
+    return `stage ${stage} encountered impossible condition`;
+  },
+  GateNotPredetermined() {
+    return 'gate was not predetermined?!';
+  },
+  ArrivalTypeButDepartureExpected() {
+    return 'arrival type encountered in departure-only model';
+  },
+  IllegalDepartureState() {
+    return 'arrival type encountered in departure-only model';
+  },
+  DatabaseInsertNotAcknowledged() {
+    return 'flight insertion failed: operation not acknowledged';
+  },
+  IncompleteDatabaseInsert(expected: number, actual: number) {
+    return `generated ${expected} flights but only ${actual} were inserted`;
+  },
+
+  expectations: {
+    NonNegativeNumber() {
+      return `to be a non-negative number`;
+    },
+    PositiveNumber() {
+      return `to be a positive number`;
+    },
+    PositiveInteger() {
+      return `to be a positive integer`;
+    },
+    GreaterThan(lower: number) {
+      return `to be greater than ${lower}`;
+    },
+    PercentageExclusive() {
+      return ErrorMessage.expectations.WithinClampExclusive(0, 100);
+    },
+    WithinClampExclusive(lower: number, upper: number) {
+      return `to be greater than ${lower} but less than ${upper}`;
+    }
   }
 };

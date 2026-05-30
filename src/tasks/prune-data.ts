@@ -3,11 +3,12 @@ import assert from 'node:assert';
 import { LogTag } from '@-xun/cli/logging';
 import { getClient, getDb, setSchemaConfig } from '@-xun/mongo-schema';
 import { runWithMongoSchemaMultitenancy } from '@-xun/mongo-schema/multitenant';
+import { isRecord } from '@-xun/types';
 import { format as stringifyBytes, parse as parseBytes } from 'bytes';
 
 import { TargetProblem, targetProblemBackends, Task } from 'universe:constant.ts';
 import { ErrorMessage } from 'universe:error.ts';
-import { isRecord, skipListrTask, waitForListr2OutputReady } from 'universe:util.ts';
+import { skipListrTask, waitForListr2OutputReady } from 'universe:util.ts';
 
 import type DriveDb from '@nhscc/backend-drive/db';
 import type QoverflowDb from '@nhscc/backend-qoverflow/db';
@@ -119,9 +120,12 @@ export default async function task(
       case TargetProblem.Airports: {
         const config = getConfigFor(target, ['root.request-log', 'root.limited-log']);
 
-        skipListrTask(fullPrettyName, debug, listrTask);
-        // TODO: unskip this task when required @nhscc/backend-X package exists
-        return;
+        const backend = await targetProblemBackends.airports;
+
+        // ? Prewarm shared memory
+        await getClient({
+          MONGODB_URI: getConfig(`${target}.mongodbUri`, 'string')
+        });
 
         const limits: Record<keyof typeof config, CollectionDataLimit> = {
           'root.request-log': {
@@ -131,6 +135,8 @@ export default async function task(
             limit: { maxBytes: config['root.limited-log'] }
           }
         };
+
+        setSchemaConfig(backend.db.getSchemaConfig());
 
         await prune(limits);
         break;

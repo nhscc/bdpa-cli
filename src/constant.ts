@@ -58,9 +58,18 @@ export const targetProblemBackends = {
     );
   },
   get airports() {
-    return Promise.reject(
-      new Error(`the backend package for "airports" is not loadable in this version`)
-    );
+    return import('@nhscc/backend-airports').then(async (api) => {
+      return {
+        ...api,
+        db: await import('@nhscc/backend-airports/db'),
+        env: await import('@nhscc/backend-airports/env')
+      };
+    }) as Promise<
+      typeof import('@nhscc/backend-airports') & {
+        db: typeof import('@nhscc/backend-airports/db');
+        env: typeof import('@nhscc/backend-airports/env');
+      }
+    >;
   },
   get barker() {
     return Promise.reject(
@@ -139,8 +148,9 @@ export const targetYears = {
   2021: [TargetProblem.Barker, TargetProblem.Ghostmeme],
   2022: [TargetProblem.Drive, TargetProblem.Qoverflow],
   2023: [TargetProblem.Blogpress, TargetProblem.Inbdpa],
-  2024: [TargetProblem.ElectionsCpl, TargetProblem.ElectionsIrv],
-  2025: [TargetProblem.Drive, TargetProblem.Qoverflow]
+  2024: [TargetProblem.ElectionsIrv, TargetProblem.ElectionsCpl],
+  2025: [TargetProblem.Drive, TargetProblem.Qoverflow],
+  2026: [TargetProblem.ElectionsIrv, TargetProblem.Airports]
 } as const;
 
 /**

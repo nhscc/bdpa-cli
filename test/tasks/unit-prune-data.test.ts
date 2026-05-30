@@ -4,6 +4,8 @@ import assert from 'node:assert';
 
 import { runWithMongoSchemaMultitenancy } from '@-xun/mongo-schema/multitenant';
 import { setupMemoryServerOverride } from '@-xun/mongo-test';
+import { getSchemaConfig as getAirportsSchemaConfig } from '@nhscc/backend-airports/db';
+import { getDummyData as getAirportsDummyData } from '@nhscc/backend-airports/dummy';
 import { getSchemaConfig as getDriveSchemaConfig } from '@nhscc/backend-drive/db';
 import { getDummyData as getDriveDummyData } from '@nhscc/backend-drive/dummy';
 import { getSchemaConfig as getQoverflowSchemaConfig } from '@nhscc/backend-qoverflow/db';
@@ -166,6 +168,125 @@ describe('target: qoverflow', () => {
       'app.mail': '10mb',
       'app.questions': '350mb',
       'app.users': '30mb'
+    }
+  });
+
+  it('prunes documents from target collections with respect to secrets.json', async () => {
+    expect.hasAssertions();
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { getConfig, collectionsUnderTest, initialSizes, taskRunnerContext } =
+      await setupTest();
+
+    // ? Expect the pruning algorithm to shrink the database by ~1/2 documents
+    await withMockedOutput(async ({ nodeLogSpy }) => {
+      const expectedSizes = Object.fromEntries(
+        Object.entries(initialSizes).map(([k, v]) => [k, Math.round(v / 2)] as const)
+      );
+
+      const fakeGetConfig = (() => {
+        return Object.fromEntries(
+          Object.entries(expectedSizes).map(([k, v]) => [k, v.toString() + 'b'] as const)
+        );
+      }) as typeof getConfig;
+
+      await pruneData('test', target, fakeGetConfig, taskRunnerContext);
+
+      await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
+        const actualSizesEntries = Object.entries(
+          await getCollectionSize(collectionsUnderTest)
+        );
+
+        for (const [index, [dbCollection, size]] of actualSizesEntries.entries()) {
+          const collectionNameUnderTest = collectionsUnderTest[index]!;
+          const expectedSize = expectedSizes[collectionNameUnderTest]!;
+
+          expect({ dbCollection, size }).toStrictEqual({
+            dbCollection,
+            size: expectedSize === 0 ? 0 : expect.toBeWithin(0, expectedSize)
+          });
+        }
+      });
+
+      expect(nodeLogSpy).toHaveBeenCalledTimes(collectionsUnderTest.length);
+    });
+
+    // ? Expect the pruning algorithm to shrink the database to 0 documents
+    await withMockedOutput(async ({ nodeLogSpy }) => {
+      const fakeGetConfig = (() => {
+        return Object.fromEntries(
+          Object.entries(initialSizes).map(([k, _v]) => [k, '1b'] as const)
+        );
+      }) as typeof getConfig;
+
+      await pruneData('test', target, fakeGetConfig, taskRunnerContext);
+
+      await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
+        const actualSizesEntries = Object.entries(
+          await getCollectionSize(collectionsUnderTest)
+        );
+
+        for (const [dbCollection, size] of actualSizesEntries) {
+          expect({ dbCollection, size }).toStrictEqual({ dbCollection, size: 0 });
+        }
+      });
+
+      expect(nodeLogSpy).toHaveBeenCalledTimes(collectionsUnderTest.length);
+    });
+  });
+
+  it('only deletes entries if necessary', async () => {
+    expect.hasAssertions();
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { getConfig, collectionsUnderTest, initialSizes, taskRunnerContext } =
+      await setupTest();
+
+    await withMockedOutput(async ({ nodeLogSpy }) => {
+      const fakeGetConfig = (() => {
+        return Object.fromEntries(
+          Object.entries(initialSizes).map(([k, _v]) => [k, '100gb'] as const)
+        );
+      }) as typeof getConfig;
+
+      await pruneData('test', target, fakeGetConfig, taskRunnerContext);
+
+      await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
+        const actualSizesEntries = Object.entries(
+          await getCollectionSize(collectionsUnderTest)
+        );
+
+        for (const [index, [dbCollection, size]] of actualSizesEntries.entries()) {
+          const collectionNameUnderTest = collectionsUnderTest[index]!;
+          assert(size > 0);
+
+          expect({ dbCollection, size }).toStrictEqual({
+            dbCollection,
+            size: initialSizes[collectionNameUnderTest]
+          });
+        }
+      });
+
+      expect(nodeLogSpy).toHaveBeenCalledTimes(collectionsUnderTest.length);
+    });
+  });
+});
+
+describe('target: airports', () => {
+  const target = 'airports';
+
+  const { setupTest } = makeSetupTestFunction({
+    target,
+    taskType,
+    initializeMemoryServerOverride,
+    killMemoryServerOverride,
+    reinitializeServerDatabases,
+    resetSharedMemory,
+    schema: getAirportsSchemaConfig(),
+    data: getAirportsDummyData(),
+    taskConfig: {
+      'root.request-log': '50mb',
+      'root.limited-log': '10mb'
     }
   });
 
