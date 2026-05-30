@@ -23,7 +23,7 @@ import runBackupData from 'universe:tasks/backup-data.ts';
 import runBanHammer from 'universe:tasks/ban-hammer.ts';
 import runInitializeData from 'universe:tasks/initialize-data.ts';
 import runPruneData from 'universe:tasks/prune-data.ts';
-import runSimulateActivity from 'universe:tasks/simulate-activity.ts';
+import runSimulateActivity from 'universe:tasks/simulate-activity/index.ts';
 
 import {
   withGlobalBuilder,
@@ -226,6 +226,8 @@ ${SINGLE_SPACE}  Not implemented in this version of ${globalCliName}.
 ${SINGLE_SPACE}  Recognized Keys + Defaults
 ${SINGLE_SPACE}  --------------------------
 
+// TODO: Setting the number too high will cause the iterator to run out of flights
+
 ${SINGLE_SPACE}  None.
 
 📚 Problem Statements + Database Servers
@@ -396,16 +398,16 @@ ${actualTargetProblems
           loggerNamespace: globalLoggerNamespace
         })({
           initialTitle: `Running applicable tasks across ${targets.length} API${targets.length === 1 ? '' : 's'}...`,
-          task: function ({ listrTask: rootListrTask }) {
+          task({ listrTask: rootListrTask }) {
             return rootListrTask.newListr(
               [
                 {
-                  task: function (_, thisTask) {
+                  task(_, thisTask) {
                     return thisTask.newListr(reifiedApiTasks, { concurrent: true });
                   }
                 },
                 {
-                  task: function () {
+                  task() {
                     rootListrTask.title = `Ran all applicable tasks across ${targets.length} API${targets.length === 1 ? '' : 's'}`;
                   }
                 }
