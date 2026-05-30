@@ -90,7 +90,7 @@
     "@nhscc/backend-qoverflow": "^1.2.1",
     "bytes": "^3.1.2",
     "core-js": "^3.49.0",
-    "env-paths": "^3.0.0",
+    "env-paths": "^4.0.0",
     "mongodb": "^6.18.0",
     "rejoinder": "^2.0.2",
     "rejoinder-listr2": "^2.0.2",
