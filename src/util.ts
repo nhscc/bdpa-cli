@@ -1,5 +1,3 @@
-import { isNativeError } from 'node:util/types';
-
 import { $executionContext } from '@-xun/cli';
 import { withStandardBuilder, withStandardUsage } from '@-xun/cli/extensions';
 import { LogTag } from '@-xun/cli/logging';
@@ -128,11 +126,11 @@ export function withStandardListrTaskConfigFactory<
             }
           }
         : {}),
-      task: async function (listrContext: { initialTitle?: string }, thisTask) {
+      async task(listrContext: { initialTitle?: string }, thisTask) {
         // TODO: does listr2 handle retry logic by itself properly yet?
         if (shouldRetry) {
           const retryData = thisTask.isRetrying();
-          const retryCount = Number(retryData?.count || 0);
+          const retryCount = retryData?.count || 0;
           initialTaskRunnerContext.standardDebug('retryData: %O', retryData);
 
           if (retryCount !== 3) {
@@ -159,8 +157,8 @@ export function withStandardListrTaskConfigFactory<
           });
         } catch (error) {
           throw new Error(
-            toSentenceCase(isNativeError(error) ? error.message : String(error)),
-            isNativeError(error) && error.cause ? { cause: error.cause } : {}
+            toSentenceCase(Error.isError(error) ? error.message : String(error)),
+            Error.isError(error) && error.cause ? { cause: error.cause } : {}
           );
         }
       }
@@ -235,9 +233,4 @@ export function withGlobalBuilder<CustomCliArguments extends GlobalCliArguments>
       });
     }
   ];
-}
-
-// ? Duplicated on purpose
-export function isRecord(o: unknown): o is Record<string, unknown> {
-  return !!o && typeof o === 'object' && !Array.isArray(o);
 }

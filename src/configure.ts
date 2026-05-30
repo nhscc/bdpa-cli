@@ -8,6 +8,7 @@ import {
 } from '@-xun/cli/configure';
 
 import { closeClient } from '@-xun/mongo-schema';
+import { isRecord } from '@-xun/types';
 import { createDebugLogger, createGenericLogger } from 'rejoinder';
 
 import {
@@ -276,8 +277,3 @@ export const configureErrorHandlingEpilogue = async function (...args) {
   await closeClient({ clearCache: 'all-tenants' });
   await makeStandardConfigureErrorHandlingEpilogue()(...args);
 } as ConfigureErrorHandlingEpilogue<GlobalExecutionContext>;
-
-// ? Duplicated on purpose
-export function isRecord(o: unknown): o is Record<string, unknown> {
-  return !!o && typeof o === 'object' && !Array.isArray(o);
-}

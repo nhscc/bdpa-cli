@@ -31,7 +31,6 @@ export default async function task(
 
     default: {
       isNoop = true as boolean;
-      debug('target-task combination is no-op');
       break;
     }
   }

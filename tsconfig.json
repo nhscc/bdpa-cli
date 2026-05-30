@@ -8,7 +8,6 @@
     // ? Due to paths, the effect of this prop is limited (often ignored)
     "allowArbitraryExtensions": true,
     "alwaysStrict": true,
-    "baseUrl": ".",
     // ? Does too much; opt-in (provided by allowJs) is better
     "checkJs": false,
     "jsx": "preserve",
@@ -42,16 +41,17 @@
     // ! directly, consider regenerating aliases across the entire project with:
     // ! `npx symbiote project renovate --regenerate-assets --assets-preset ...`
     "paths": {
-      "universe": ["src/index.ts"],
-      "universe:*": ["src/*"],
-      "testverse:*": ["test/*"],
-      "typeverse:*": ["types/*"],
-      "rootverse:*": ["*"]
+      "universe": ["./src/index.ts"],
+      "universe:*": ["./src/*"],
+      "testverse:*": ["./test/*"],
+      "typeverse:*": ["./types/*"],
+      "rootverse:*": ["./*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ESNext"
+    "target": "ESNext",
+    "types": ["node", "jest"]
   },
   "include": [
     "types/**/*",
