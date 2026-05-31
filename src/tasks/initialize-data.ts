@@ -30,6 +30,7 @@ export default async function task(
     // }
 
     default: {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       isNoop = true as boolean;
       break;
     }

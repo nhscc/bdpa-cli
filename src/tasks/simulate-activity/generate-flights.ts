@@ -1,8 +1,6 @@
 /* eslint-disable unicorn/no-array-reduce */
 import { randomBytes, randomInt } from 'node:crypto';
 
-import { LogTag } from '@-xun/cli/logging';
-
 import {
   getAirlinesDb,
   getAirportsDb,
@@ -111,8 +109,7 @@ export async function generateFlights({
     chanceOfNewFlightsInAnHour,
     chanceOfExtrasItemOfferedOnAFlight,
     gateLettersCount,
-    gateNumbersPerLetter,
-    gatesPerAirport
+    gateNumbersPerLetter
   } = generatorConfig;
 
   const { flightsDb } = await getFlightsDb();
@@ -354,7 +351,7 @@ export async function generateFlights({
                             Math.floor(seatsPerFlight / numSeatClasses)
                           );
                         })
-                        .sort((a, b) => b - a);
+                        .toSorted((a, b) => b - a);
 
                       // ? Give any remaining seats to the cheapest option
                       numSeats[0]! +=

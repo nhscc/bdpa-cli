@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-commented-out-tests */
 test.todo('this');
 
 // describe('::generateFlights', () => {

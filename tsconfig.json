@@ -51,6 +51,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
+    // ? With TypeScript 6.0, all node_modules/@types must be specified manually
     "types": ["node", "jest"]
   },
   "include": [

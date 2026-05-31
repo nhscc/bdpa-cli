@@ -454,7 +454,7 @@ export default async function task(
         const collection = db.collection(collectionName);
         const totalCount = await collection.countDocuments();
 
-        const { limit: limitSpec, orderBy = '_id', deleteFn = undefined } = colLimitsObj;
+        const { limit: limitSpec, orderBy = '_id', deleteFn } = colLimitsObj;
 
         debug('limiting metric: document size');
 

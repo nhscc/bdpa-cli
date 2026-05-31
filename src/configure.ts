@@ -158,6 +158,7 @@ export const configureExecutionContext = async function (context) {
 
   let startupError = undefined as undefined | Error;
 
+  // eslint-disable-next-line @typescript-eslint/await-thenable
   const [standardContext, [configPath, config]] = await Promise.all([
     standardContextFactory(context),
     getWellKnownConfigPath().then(async (path) => {
@@ -167,7 +168,7 @@ export const configureExecutionContext = async function (context) {
         startupError = new CliError(ErrorMessage.UnreadableConfigFile(path), {
           cause: error
         });
-        return [path, {} as JsonValue] as const;
+        return [path, {}] as const;
       }
     })
   ] as const);

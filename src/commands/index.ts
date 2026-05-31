@@ -221,14 +221,12 @@ ${SINGLE_SPACE}  None.
 
 🔵 "simulate-activity"
 
-${SINGLE_SPACE}  Not implemented in this version of ${globalCliName}.
+${SINGLE_SPACE}  Simulate internal or external activity within any system governed by this tool.
 
 ${SINGLE_SPACE}  Recognized Keys + Defaults
 ${SINGLE_SPACE}  --------------------------
 
-// TODO: Setting the number too high will cause the iterator to run out of flights
-
-${SINGLE_SPACE}  None.
+${SINGLE_SPACE}  There are too many keys and permutations to list here. See the example secrets.json file's "simulate-activity" keys for some examples.
 
 📚 Problem Statements + Database Servers
 ----------------------------------------
