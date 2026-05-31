@@ -8,7 +8,7 @@
 
 > **default**(`taskName`, `target`, `getConfig`, `__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [src/tasks/backup-data.ts:11](https://github.com/nhscc/bdpa-cli/blob/0d71d1aa44b2e7aac852a99410ddf87be49531b0/src/tasks/backup-data.ts#L11)
+Defined in: [src/tasks/backup-data.ts:11](https://github.com/nhscc/bdpa-cli/blob/8823b9cdc0e4267643e0a553303936f796d68dac/src/tasks/backup-data.ts#L11)
 
 ## Parameters
 

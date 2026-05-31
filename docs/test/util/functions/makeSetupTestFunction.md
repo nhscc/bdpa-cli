@@ -8,7 +8,7 @@
 
 > **makeSetupTestFunction**\<`TaskConfig`, `TaskConfigIsCollections`\>(`__namedParameters`): `object`
 
-Defined in: [test/util.ts:138](https://github.com/nhscc/bdpa-cli/blob/0d71d1aa44b2e7aac852a99410ddf87be49531b0/test/util.ts#L138)
+Defined in: [test/util.ts:138](https://github.com/nhscc/bdpa-cli/blob/8823b9cdc0e4267643e0a553303936f796d68dac/test/util.ts#L138)
 
 This function takes several return values from `setupMemoryServerOverride({
 defer: 'without-hooks' })`, a `supportedTask` sub-object configuration (e.g.

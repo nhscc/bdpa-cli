@@ -8,4 +8,4 @@
 
 > `const` **taskType**: `"prune"` = `Task.PruneData`
 
-Defined in: [src/tasks/prune-data.ts:22](https://github.com/nhscc/bdpa-cli/blob/0d71d1aa44b2e7aac852a99410ddf87be49531b0/src/tasks/prune-data.ts#L22)
+Defined in: [src/tasks/prune-data.ts:22](https://github.com/nhscc/bdpa-cli/blob/8823b9cdc0e4267643e0a553303936f796d68dac/src/tasks/prune-data.ts#L22)

@@ -6,9 +6,9 @@
 
 # Function: default()
 
-> **default**(`_taskName`, `target`, `getConfig`, `__namedParameters`): `Promise`\<`Listr`\<`unknown`, `any`, `any`\>\>
+> **default**(`_taskName`, `target`, `getConfig`, `__namedParameters`): `Promise`\<`Listr`\<`unknown`, `any`, `any`\> \| `undefined`\>
 
-Defined in: [src/tasks/simulate-activity/index.ts:16](https://github.com/nhscc/bdpa-cli/blob/0d71d1aa44b2e7aac852a99410ddf87be49531b0/src/tasks/simulate-activity/index.ts#L16)
+Defined in: [src/tasks/simulate-activity/index.ts:16](https://github.com/nhscc/bdpa-cli/blob/8823b9cdc0e4267643e0a553303936f796d68dac/src/tasks/simulate-activity/index.ts#L16)
 
 ## Parameters
 
@@ -30,4 +30,4 @@ Defined in: [src/tasks/simulate-activity/index.ts:16](https://github.com/nhscc/b
 
 ## Returns
 
-`Promise`\<`Listr`\<`unknown`, `any`, `any`\>\>
+`Promise`\<`Listr`\<`unknown`, `any`, `any`\> \| `undefined`\>
