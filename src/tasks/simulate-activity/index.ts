@@ -5,6 +5,7 @@ import { TargetProblem, targetProblemBackends, Task } from 'universe:constant.ts
 import { ErrorMessage } from 'universe:error.ts';
 import { skipListrTask, waitForListr2OutputReady } from 'universe:util.ts';
 
+import type { Listr } from 'listr2';
 import type { GlobalExecutionContext } from 'universe:configure.ts';
 import type { ActualTargetProblem } from 'universe:constant.ts';
 import type { TaskRunnerContext } from 'universe:util.ts';
@@ -13,7 +14,7 @@ const fullPrettyName = 'simulate activity';
 const taskType = Task.SimulateActivity;
 
 export default async function task(
-  taskName: string,
+  _taskName: string,
   target: ActualTargetProblem,
   getConfig: GlobalExecutionContext['getConfig'],
   { listrTask, standardDebug: standardDebug_ }: TaskRunnerContext
@@ -22,9 +23,9 @@ export default async function task(
 
   const debug = standardDebug_.extend(taskType);
 
-  const keyPrefix = `${target}.simulate-activity`;
+  const keyPrefix = `${target}.supportedTasks.simulate-activity`;
   const keys = {
-    generatorConcurrency: `${keyPrefix}.flights.generatorConcurrency`,
+    generatorConcurrency: `${keyPrefix}.generatorConcurrency`,
 
     generateFlightsInAdvanceDays: `${keyPrefix}.flights.generateFlightsInAdvanceDays`,
     maxFlightTimeToLiveDays: `${keyPrefix}.flights.maxFlightTimeToLiveDays`,
@@ -54,11 +55,12 @@ export default async function task(
     gatesPerAirport: `${keyPrefix}.airports.gatesPerAirport`
   };
 
+  const tenantId = `${target}-${taskType}`;
+  let backend, runSimulationSubtask: () => Promise<Listr>;
+
   await waitForListr2OutputReady(debug);
 
-  await runWithMongoSchemaMultitenancy(`${target}-${taskType}`, async () => {
-    let backend, runAndThenCleanupSimulation: () => Promise<void>;
-
+  await runWithMongoSchemaMultitenancy(tenantId, async () => {
     switch (target) {
       case TargetProblem.ElectionsCpl:
       case TargetProblem.ElectionsIrv:
@@ -75,378 +77,262 @@ export default async function task(
 
       case TargetProblem.Airports: {
         backend = await targetProblemBackends.airports;
+        const { generateFlights } =
+          await import('universe:tasks/simulate-activity/subtasks/generate-flights.ts');
 
-        runAndThenCleanupSimulation = () => {
-          const generatorConcurrency = getConfig<number>(
-            keys.generatorConcurrency,
-            (value) =>
-              (Number.isInteger(value) && Number(value) > 0) ||
-              ErrorMessage.InvalidConfigFile(
-                keys.generatorConcurrency,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveInteger(),
-                  value
-                )
-              )
-          );
+        const generatorConcurrency = getConfig<number>(
+          keys.generatorConcurrency,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const generateFlightsInAdvanceDays = getConfig<number>(
-            keys.generateFlightsInAdvanceDays,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.generateFlightsInAdvanceDays,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const generateFlightsInAdvanceDays = getConfig<number>(
+          keys.generateFlightsInAdvanceDays,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const maxFlightTimeToLiveDays = getConfig<number>(
-            keys.maxFlightTimeToLiveDays,
-            (value) =>
-              Number(value) > generateFlightsInAdvanceDays ||
-              ErrorMessage.InvalidConfigFile(
-                keys.maxFlightTimeToLiveDays,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.GreaterThan(generateFlightsInAdvanceDays),
-                  value
-                )
-              )
-          );
+        const maxFlightTimeToLiveDays = getConfig<number>(
+          keys.maxFlightTimeToLiveDays,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > generateFlightsInAdvanceDays) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.GreaterThanInteger(generateFlightsInAdvanceDays),
+              value
+            )
+        );
 
-          const minSeatsPerClass = getConfig<number>(
-            keys.minSeatsPerClass,
-            (value) =>
-              Number(value) >= 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.minSeatsPerClass,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.NonNegativeNumber(),
-                  value
-                )
-              )
-          );
+        const minSeatsPerClass = getConfig<number>(
+          keys.minSeatsPerClass,
+          (value) =>
+            (Number.isInteger(value) && Number(value) >= 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.NonNegativeInteger(),
+              value
+            )
+        );
 
-          const seatsPerFlight = getConfig<number>(
-            keys.seatsPerFlight,
-            (value) =>
-              Number(value) > minSeatsPerClass ||
-              ErrorMessage.InvalidConfigFile(
-                keys.seatsPerFlight,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.GreaterThan(minSeatsPerClass),
-                  value
-                )
-              )
-          );
+        const seatsPerFlight = getConfig<number>(
+          keys.seatsPerFlight,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > minSeatsPerClass) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.GreaterThanInteger(minSeatsPerClass),
+              value
+            )
+        );
 
-          const maxCheckedBagsPerFlier = getConfig<number>(
-            keys.maxCheckedBagsPerFlier,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.maxCheckedBagsPerFlier,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const maxCheckedBagsPerFlier = getConfig<number>(
+          keys.maxCheckedBagsPerFlier,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const maxCarryBagsPerFlier = getConfig<number>(
-            keys.maxCarryBagsPerFlier,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.maxCarryBagsPerFlier,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const maxCarryBagsPerFlier = getConfig<number>(
+          keys.maxCarryBagsPerFlier,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const baseCheckedBagPriceDollars = getConfig<number>(
-            keys.baseCheckedBagPriceDollars,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.baseCheckedBagPriceDollars,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const baseCheckedBagPriceDollars = getConfig<number>(
+          keys.baseCheckedBagPriceDollars,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const baseCarryBagPriceDollars = getConfig<number>(
-            keys.baseCarryBagPriceDollars,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.baseCarryBagPriceDollars,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const baseCarryBagPriceDollars = getConfig<number>(
+          keys.baseCarryBagPriceDollars,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const minBaseSeatPriceDollars = getConfig<number>(
-            keys.minBaseSeatPriceDollars,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.minBaseSeatPriceDollars,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const minBaseSeatPriceDollars = getConfig<number>(
+          keys.minBaseSeatPriceDollars,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const maxBaseSeatPriceDollars = getConfig<number>(
-            keys.maxBaseSeatPriceDollars,
-            (value) =>
-              Number(value) > minBaseSeatPriceDollars ||
-              ErrorMessage.InvalidConfigFile(
-                keys.maxBaseSeatPriceDollars,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.GreaterThan(minBaseSeatPriceDollars),
-                  value
-                )
-              )
-          );
+        const maxBaseSeatPriceDollars = getConfig<number>(
+          keys.maxBaseSeatPriceDollars,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > minBaseSeatPriceDollars) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.GreaterThanInteger(minBaseSeatPriceDollars),
+              value
+            )
+        );
 
-          const minBaseSeatPriceFfms = getConfig<number>(
-            keys.minBaseSeatPriceFfms,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.minBaseSeatPriceFfms,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const minBaseSeatPriceFfms = getConfig<number>(
+          keys.minBaseSeatPriceFfms,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const maxBaseSeatPriceFfms = getConfig<number>(
-            keys.maxBaseSeatPriceFfms,
-            (value) =>
-              Number(value) > minBaseSeatPriceFfms ||
-              ErrorMessage.InvalidConfigFile(
-                keys.maxBaseSeatPriceFfms,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.GreaterThan(minBaseSeatPriceFfms),
-                  value
-                )
-              )
-          );
+        const maxBaseSeatPriceFfms = getConfig<number>(
+          keys.maxBaseSeatPriceFfms,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > minBaseSeatPriceFfms) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.GreaterThanInteger(minBaseSeatPriceFfms),
+              value
+            )
+        );
 
-          const minBaseExtraPriceDollars = getConfig<number>(
-            keys.minBaseExtraPriceDollars,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.minBaseExtraPriceDollars,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const minBaseExtraPriceDollars = getConfig<number>(
+          keys.minBaseExtraPriceDollars,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const maxBaseExtraPriceDollars = getConfig<number>(
-            keys.maxBaseExtraPriceDollars,
-            (value) =>
-              Number(value) > minBaseExtraPriceDollars ||
-              ErrorMessage.InvalidConfigFile(
-                keys.maxBaseExtraPriceDollars,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.GreaterThan(minBaseExtraPriceDollars),
-                  value
-                )
-              )
-          );
+        const maxBaseExtraPriceDollars = getConfig<number>(
+          keys.maxBaseExtraPriceDollars,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > minBaseExtraPriceDollars) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.GreaterThanInteger(minBaseExtraPriceDollars),
+              value
+            )
+        );
 
-          const minBaseExtraPriceFfms = getConfig<number>(
-            keys.minBaseExtraPriceFfms,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.minBaseExtraPriceFfms,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const minBaseExtraPriceFfms = getConfig<number>(
+          keys.minBaseExtraPriceFfms,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const maxBaseExtraPriceFfms = getConfig<number>(
-            keys.maxBaseExtraPriceFfms,
-            (value) =>
-              Number(value) > minBaseExtraPriceFfms ||
-              ErrorMessage.InvalidConfigFile(
-                keys.maxBaseExtraPriceFfms,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.GreaterThan(minBaseExtraPriceFfms),
-                  value
-                )
-              )
-          );
+        const maxBaseExtraPriceFfms = getConfig<number>(
+          keys.maxBaseExtraPriceFfms,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > minBaseExtraPriceFfms) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.GreaterThanInteger(minBaseExtraPriceFfms),
+              value
+            )
+        );
 
-          const minBaseFlightFfmsEarned = getConfig<number>(
-            keys.minBaseFlightFfmsEarned,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.minBaseFlightFfmsEarned,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const minBaseFlightFfmsEarned = getConfig<number>(
+          keys.minBaseFlightFfmsEarned,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const maxBaseFlightFfmsEarned = getConfig<number>(
-            keys.maxBaseFlightFfmsEarned,
-            (value) =>
-              Number(value) > minBaseFlightFfmsEarned ||
-              ErrorMessage.InvalidConfigFile(
-                keys.maxBaseFlightFfmsEarned,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.GreaterThan(minBaseFlightFfmsEarned),
-                  value
-                )
-              )
-          );
+        const maxBaseFlightFfmsEarned = getConfig<number>(
+          keys.maxBaseFlightFfmsEarned,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > minBaseFlightFfmsEarned) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.GreaterThanInteger(minBaseFlightFfmsEarned),
+              value
+            )
+        );
 
-          const greedMultiplier = getConfig<number>(
-            keys.greedMultiplier,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.greedMultiplier,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PositiveNumber(),
-                  value
-                )
-              )
-          );
+        const greedMultiplier = getConfig<number>(
+          keys.greedMultiplier,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
+        );
 
-          const chanceOfNewFlightInAnAirportInAnHour = getConfig<number>(
-            keys.chanceOfNewFlightInAnAirportInAnHour,
-            (value) =>
-              (Number(value) > 0 && Number(value) < 100) ||
-              ErrorMessage.InvalidConfigFile(
-                keys.chanceOfNewFlightInAnAirportInAnHour,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PercentageExclusive(),
-                  value
-                )
-              )
-          );
+        const chanceOfNewFlightInAnAirportInAnHour = getConfig<number>(
+          keys.chanceOfNewFlightInAnAirportInAnHour,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0 && Number(value) < 100) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PercentageExclusive(),
+              value
+            )
+        );
 
-          const chanceOfNewFlightsInAnHour = getConfig<number>(
-            keys.chanceOfNewFlightsInAnHour,
-            (value) =>
-              (Number(value) > 0 && Number(value) < 100) ||
-              ErrorMessage.InvalidConfigFile(
-                keys.chanceOfNewFlightsInAnHour,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PercentageExclusive(),
-                  value
-                )
-              )
-          );
+        const chanceOfNewFlightsInAnHour = getConfig<number>(
+          keys.chanceOfNewFlightsInAnHour,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0 && Number(value) < 100) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PercentageExclusive(),
+              value
+            )
+        );
 
-          const chanceOfExtrasItemOfferedOnAFlight = getConfig<number>(
-            keys.chanceOfNewFlightsInAnHour,
-            (value) =>
-              (Number(value) > 0 && Number(value) < 100) ||
-              ErrorMessage.InvalidConfigFile(
-                keys.chanceOfNewFlightsInAnHour,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.PercentageExclusive(),
-                  value
-                )
-              )
-          );
+        const chanceOfExtrasItemOfferedOnAFlight = getConfig<number>(
+          keys.chanceOfNewFlightsInAnHour,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0 && Number(value) < 100) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PercentageExclusive(),
+              value
+            )
+        );
 
-          const gateLettersCount = getConfig<number>(
-            keys.gateLettersCount,
-            (value) =>
-              (Number(value) > 0 && Number(value) < 27) ||
-              ErrorMessage.InvalidConfigFile(
-                keys.gateLettersCount,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.WithinClampExclusive(0, 27),
-                  value
-                )
-              )
-          );
+        const gateLettersCount = getConfig<number>(
+          keys.gateLettersCount,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0 && Number(value) < 27) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.WithinIntegerClampExclusive(0, 27),
+              value
+            )
+        );
 
-          const gateNumbersPerLetter = getConfig<number>(
-            keys.gateNumbersPerLetter,
-            (value) =>
-              Number(value) > 0 ||
-              ErrorMessage.InvalidConfigFile(
-                keys.gateNumbersPerLetter,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.NonNegativeNumber(),
-                  value
-                )
-              )
-          );
+        const gateNumbersPerLetter = getConfig<number>(
+          keys.gateNumbersPerLetter,
+          (value) =>
+            (Number.isInteger(value) && Number(value) > 0) ||
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.NonNegativeInteger(),
+              value
+            )
+        );
 
-          const gatesPerAirport = getConfig<number>(keys.gatesPerAirport, (value_) => {
-            const value = Number(value_);
-            const upperClamp = gateLettersCount * gateNumbersPerLetter + 1;
-
-            return (
-              (value > 0 && value < upperClamp) ||
-              ErrorMessage.InvalidConfigFile(
-                keys.gatesPerAirport,
-                undefined,
-                ErrorMessage.UnexpectedValue(
-                  ErrorMessage.expectations.WithinClampExclusive(0, upperClamp),
-                  value
-                )
-              )
-            );
-          });
-
-          return (
-            require('universe:tasks/simulate-activity/generate-flights.ts') as typeof import('universe:tasks/simulate-activity/generate-flights.ts')
-          ).generateFlights({
+        runSimulationSubtask = () =>
+          generateFlights({
+            tenantId,
             listrTask,
             taskGlobalDebug: debug,
 
@@ -474,10 +360,8 @@ export default async function task(
             chanceOfNewFlightsInAnHour,
             chanceOfExtrasItemOfferedOnAFlight,
             gateLettersCount,
-            gateNumbersPerLetter,
-            gatesPerAirport
+            gateNumbersPerLetter
           });
-        };
 
         break;
       }
@@ -493,9 +377,21 @@ export default async function task(
     });
 
     setSchemaConfig(backend.db.getSchemaConfig());
-
-    await runAndThenCleanupSimulation();
   });
 
-  listrTask.title = `Finished "${fullPrettyName}"`;
+  return listrTask.newListr(
+    [
+      {
+        async task() {
+          return runSimulationSubtask();
+        }
+      },
+      {
+        task() {
+          listrTask.title = `Finished "${fullPrettyName}"`;
+        }
+      }
+    ],
+    { concurrent: false }
+  );
 }
