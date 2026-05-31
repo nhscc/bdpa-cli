@@ -65,23 +65,20 @@ export const ErrorMessage = {
   },
 
   expectations: {
-    NonNegativeNumber() {
-      return `to be a non-negative number`;
-    },
-    PositiveNumber() {
-      return `to be a positive number`;
+    NonNegativeInteger() {
+      return `to be a non-negative integer`;
     },
     PositiveInteger() {
       return `to be a positive integer`;
     },
-    GreaterThan(lower: number) {
-      return `to be greater than ${lower}`;
+    GreaterThanInteger(lower: number) {
+      return `to be an integer greater than ${lower}`;
     },
     PercentageExclusive() {
-      return ErrorMessage.expectations.WithinClampExclusive(0, 100);
+      return ErrorMessage.expectations.WithinIntegerClampExclusive(0, 100);
     },
-    WithinClampExclusive(lower: number, upper: number) {
-      return `to be greater than ${lower} but less than ${upper}`;
+    WithinIntegerClampExclusive(lower: number, upper: number) {
+      return `to be integer greater than ${lower} but less than ${upper}`;
     }
   }
 };

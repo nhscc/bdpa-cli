@@ -334,12 +334,15 @@ export default async function task(
     ] as const;
 
     for (const [key, value] of configs) {
-      if (value <= 0) {
+      if (!Number.isInteger(value) || value <= 0) {
         throw new Error(
           ErrorMessage.InvalidConfigFile(
             key,
             undefined,
-            ErrorMessage.UnexpectedValue(ErrorMessage.expectations.GreaterThan(0), value)
+            ErrorMessage.UnexpectedValue(
+              ErrorMessage.expectations.PositiveInteger(),
+              value
+            )
           )
         );
       }

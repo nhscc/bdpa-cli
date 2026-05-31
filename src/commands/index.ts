@@ -300,7 +300,7 @@ ${actualTargetProblems
                   initialTitle: 'Queueing new task...',
                   rendererOptions: apiTaskRenderOptions,
                   async task(taskRunnerContext) {
-                    await runBanHammer(
+                    return runBanHammer(
                       Task.BanHammer,
                       target,
                       getConfig,
@@ -318,7 +318,7 @@ ${actualTargetProblems
                   initialTitle: 'Queueing new task...',
                   rendererOptions: apiTaskRenderOptions,
                   async task(taskRunnerContext) {
-                    await runPruneData(
+                    return runPruneData(
                       Task.PruneData,
                       target,
                       getConfig,
@@ -336,7 +336,7 @@ ${actualTargetProblems
                   initialTitle: 'Queueing new task...',
                   rendererOptions: apiTaskRenderOptions,
                   async task(taskRunnerContext) {
-                    await runInitializeData(
+                    return runInitializeData(
                       Task.InitializeData,
                       target,
                       getConfig,
@@ -354,7 +354,7 @@ ${actualTargetProblems
                   initialTitle: 'Queueing new task...',
                   rendererOptions: apiTaskRenderOptions,
                   async task(taskRunnerContext) {
-                    await runBackupData(
+                    return runBackupData(
                       Task.BackupData,
                       target,
                       getConfig,
@@ -372,7 +372,7 @@ ${actualTargetProblems
                   initialTitle: 'Queueing new task...',
                   rendererOptions: apiTaskRenderOptions,
                   async task(taskRunnerContext) {
-                    await runSimulateActivity(
+                    return runSimulateActivity(
                       Task.SimulateActivity,
                       target,
                       getConfig,
