@@ -8,7 +8,7 @@
 
 > `const` **inputTargets**: ([`TargetProblem`](../type-aliases/TargetProblem.md) \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `2026` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`)[]
 
-Defined in: [src/constant.ts:201](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/constant.ts#L201)
+Defined in: [src/constant.ts:201](https://github.com/nhscc/bdpa-cli/blob/0d71d1aa44b2e7aac852a99410ddf87be49531b0/src/constant.ts#L201)
 
 All possible ways to identify a problem statement (its name, year, or db).
 
