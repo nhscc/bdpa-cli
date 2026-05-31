@@ -657,8 +657,8 @@ export async function generateFlights({
                                     // ? This flight just took off!
                                     previousActiveAfter = state.departFromSender;
 
-                                    // ? 80% chance this flight is not cancelled
-                                    if (getRandomPercentage() > 80) {
+                                    // ? 95% chance this flight is not cancelled
+                                    if (getRandomPercentage() > 95) {
                                       state.status = 'cancelled';
                                       done = true;
                                     } else {
