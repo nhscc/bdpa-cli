@@ -8,6 +8,6 @@
 
 > **Configuration** = `Record`\<keyof [`TargetProblem`](../../constant/type-aliases/TargetProblem.md), `JsonObject`\>
 
-Defined in: [src/configure.ts:55](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/configure.ts#L55)
+Defined in: [src/configure.ts:56](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/configure.ts#L56)
 
 The expected shape of an incoming JSON configuration object.

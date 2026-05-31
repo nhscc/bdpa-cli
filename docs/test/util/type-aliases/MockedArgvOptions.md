@@ -18,7 +18,7 @@ Defined in: node\_modules/@-xun/test-mock-argv/dist/packages/test-mock-argv/src/
 
 ### replaceEntireArgv?
 
-> `optional` **replaceEntireArgv**: `boolean`
+> `optional` **replaceEntireArgv?**: `boolean`
 
 Defined in: node\_modules/@-xun/test-mock-argv/dist/packages/test-mock-argv/src/index.d.ts:13
 

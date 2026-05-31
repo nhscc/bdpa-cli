@@ -8,7 +8,7 @@
 
 > **makeGetConfig**(): `Promise`\<\<`T`\>(`key`, `validator`) => `T`\>
 
-Defined in: [test/util.ts:90](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/test/util.ts#L90)
+Defined in: [test/util.ts:90](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/test/util.ts#L90)
 
 Make and return a `getConfig` function.
 

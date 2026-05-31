@@ -14,7 +14,6 @@
 
 ## Functions
 
-- [isRecord](functions/isRecord.md)
 - [skipListrTask](functions/skipListrTask.md)
 - [waitForListr2OutputReady](functions/waitForListr2OutputReady.md)
 - [withGlobalBuilder](functions/withGlobalBuilder.md)

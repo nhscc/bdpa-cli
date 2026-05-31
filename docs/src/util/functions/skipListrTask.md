@@ -8,7 +8,7 @@
 
 > **skipListrTask**(`fullPrettyName`, `debugLog`, `listrTask`): `void`
 
-Defined in: [src/util.ts:42](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/util.ts#L42)
+Defined in: [src/util.ts:40](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/util.ts#L40)
 
 Skip a listr2 task.
 

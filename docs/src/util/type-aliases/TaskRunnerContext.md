@@ -8,7 +8,7 @@
 
 > **TaskRunnerContext**\<`ListrContext`\> = `object`
 
-Defined in: [src/util.ts:23](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/util.ts#L23)
+Defined in: [src/util.ts:21](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/util.ts#L21)
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: [src/util.ts:23](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a
 
 > **listrContext**: `ListrContext`
 
-Defined in: [src/util.ts:28](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/util.ts#L28)
+Defined in: [src/util.ts:26](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/util.ts#L26)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/util.ts:28](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a
 
 > **listrLog**: `ExtendedLogger`
 
-Defined in: [src/util.ts:30](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/util.ts#L30)
+Defined in: [src/util.ts:28](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/util.ts#L28)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/util.ts:30](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a
 
 > **listrTask**: `Parameters`\<[`ListrTaskLiteral`](ListrTaskLiteral.md)\[`"task"`\]\>\[`1`\]
 
-Defined in: [src/util.ts:29](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/util.ts#L29)
+Defined in: [src/util.ts:27](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/util.ts#L27)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/util.ts:29](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a
 
 > **standardDebug**: `ExtendedDebugger`
 
-Defined in: [src/util.ts:27](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/util.ts#L27)
+Defined in: [src/util.ts:25](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/util.ts#L25)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [src/util.ts:27](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a
 
 > **standardLog**: `ExtendedLogger`
 
-Defined in: [src/util.ts:26](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/util.ts#L26)
+Defined in: [src/util.ts:24](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/util.ts#L24)

@@ -8,7 +8,7 @@
 
 > **waitForListr2OutputReady**(`standardDebug`): `Promise`\<`void`\>
 
-Defined in: [src/util.ts:66](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/util.ts#L66)
+Defined in: [src/util.ts:64](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/util.ts#L64)
 
 Call this hack once before attempting to output using rejoinder within listr2
 in the specific circumstance that (1) you're using the `permanent` render

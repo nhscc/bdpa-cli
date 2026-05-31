@@ -8,6 +8,6 @@
 
 > `const` **globalCliName**: `"bdpa-cli"` = `'bdpa-cli'`
 
-Defined in: [src/constant.ts:4](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/constant.ts#L4)
+Defined in: [src/constant.ts:4](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/constant.ts#L4)
 
 The name of the command line interface.

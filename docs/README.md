@@ -19,6 +19,7 @@
 - [src/tasks/initialize-data](src/tasks/initialize-data/README.md)
 - [src/tasks/prune-data](src/tasks/prune-data/README.md)
 - [src/tasks/simulate-activity](src/tasks/simulate-activity/README.md)
+- [src/tasks/simulate-activity/subtasks/generate-flights](src/tasks/simulate-activity/subtasks/generate-flights/README.md)
 - [src/util](src/util/README.md)
 - [test/setup](test/setup/README.md)
 - [test/util](test/util/README.md)

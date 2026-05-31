@@ -23,4 +23,3 @@
 - [configureExecutionContext](functions/configureExecutionContext.md)
 - [configureExecutionEpilogue](functions/configureExecutionEpilogue.md)
 - [getWellKnownConfigPath](functions/getWellKnownConfigPath.md)
-- [isRecord](functions/isRecord.md)

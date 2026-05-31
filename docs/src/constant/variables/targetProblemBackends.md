@@ -8,21 +8,21 @@
 
 > `const` **targetProblemBackends**: `object`
 
-Defined in: [src/constant.ts:54](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/constant.ts#L54)
+Defined in: [src/constant.ts:54](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/constant.ts#L54)
 
 A map of HSCC cloud services to their respective backend implementations.
 
-## Type declaration
+## Type Declaration
 
 ### airports
 
 #### Get Signature
 
-> **get** **airports**(): `Promise`\<`never`\>
+> **get** **airports**(): `Promise`\<`__module` & `object`\>
 
 ##### Returns
 
-`Promise`\<`never`\>
+`Promise`\<`__module` & `object`\>
 
 ### barker
 

@@ -8,15 +8,147 @@
 
 > `const` **ErrorMessage**: `object`
 
-Defined in: [src/error.ts:8](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/error.ts#L8)
+Defined in: [src/error.ts:8](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/error.ts#L8)
 
 A collection of possible error and warning messages.
 
-## Type declaration
+## Type Declaration
 
-### GuruMeditation()
+### expectations
+
+> **expectations**: `object`
+
+#### expectations.GreaterThanInteger()
+
+> **GreaterThanInteger**(`lower`): `string`
+
+##### Parameters
+
+###### lower
+
+`number`
+
+##### Returns
+
+`string`
+
+#### expectations.NonNegativeInteger()
+
+> **NonNegativeInteger**(): `string`
+
+##### Returns
+
+`string`
+
+#### expectations.PercentageExclusive()
+
+> **PercentageExclusive**(): `string`
+
+##### Returns
+
+`string`
+
+#### expectations.PositiveInteger()
+
+> **PositiveInteger**(): `string`
+
+##### Returns
+
+`string`
+
+#### expectations.WithinIntegerClampExclusive()
+
+> **WithinIntegerClampExclusive**(`lower`, `upper`): `string`
+
+##### Parameters
+
+###### lower
+
+`number`
+
+###### upper
+
+`number`
+
+##### Returns
+
+`string`
+
+### GuruMeditation
 
 > **GuruMeditation**: () => `string` = `UpstreamErrorMessage.GuruMeditation`
+
+#### Returns
+
+`string`
+
+### ArrivalTypeButDepartureExpected()
+
+> **ArrivalTypeButDepartureExpected**(): `string`
+
+#### Returns
+
+`string`
+
+### BadInfoDb()
+
+> **BadInfoDb**(): `string`
+
+#### Returns
+
+`string`
+
+### DatabaseInsertNotAcknowledged()
+
+> **DatabaseInsertNotAcknowledged**(): `string`
+
+#### Returns
+
+`string`
+
+### GateNotPredetermined()
+
+> **GateNotPredetermined**(): `string`
+
+#### Returns
+
+`string`
+
+### IllegalDepartureState()
+
+> **IllegalDepartureState**(): `string`
+
+#### Returns
+
+`string`
+
+### ImpossibleStochasticState()
+
+> **ImpossibleStochasticState**(`stage`): `string`
+
+#### Parameters
+
+##### stage
+
+`number`
+
+#### Returns
+
+`string`
+
+### IncompleteDatabaseInsert()
+
+> **IncompleteDatabaseInsert**(`expected`, `actual`): `string`
+
+#### Parameters
+
+##### expected
+
+`number`
+
+##### actual
+
+`number`
 
 #### Returns
 
@@ -62,11 +194,35 @@ A collection of possible error and warning messages.
 
 ##### path
 
-`undefined` | `string`
+`string` \| `undefined`
 
 ##### problem
 
-`undefined` | `string`
+`string` \| `undefined`
+
+#### Returns
+
+`string`
+
+### IteratorRanOutOfElements()
+
+> **IteratorRanOutOfElements**(): `string`
+
+#### Returns
+
+`string`
+
+### LessThanTwoAirportsOrAirlines()
+
+> **LessThanTwoAirportsOrAirlines**(): `string`
+
+#### Returns
+
+`string`
+
+### MissingStochasticState()
+
+> **MissingStochasticState**(): `string`
 
 #### Returns
 

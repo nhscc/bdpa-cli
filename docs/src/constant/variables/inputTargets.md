@@ -6,9 +6,9 @@
 
 # Variable: inputTargets
 
-> `const` **inputTargets**: ([`TargetProblem`](../type-aliases/TargetProblem.md) \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`)[]
+> `const` **inputTargets**: ([`TargetProblem`](../type-aliases/TargetProblem.md) \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `2026` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`)[]
 
-Defined in: [src/constant.ts:191](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/constant.ts#L191)
+Defined in: [src/constant.ts:201](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/constant.ts#L201)
 
 All possible ways to identify a problem statement (its name, year, or db).
 

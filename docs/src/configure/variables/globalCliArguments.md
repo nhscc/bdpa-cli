@@ -8,7 +8,7 @@
 
 > `const` **globalCliArguments**: `object`
 
-Defined in: [src/configure.ts:119](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/configure.ts#L119)
+Defined in: [src/configure.ts:120](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/configure.ts#L120)
 
 This BfeBuilderObject instance describes the CLI arguments available
 in the `argv` object of any command that uses [withGlobalBuilder](../../util/functions/withGlobalBuilder.md) to
@@ -25,7 +25,7 @@ pass minimal configuration values for the keys that are also in
 `globalCliArguments` and those values will be merged over the corresponding
 default configuration value in `globalCliArguments`.
 
-## Type declaration
+## Type Declaration
 
 ### targets
 
@@ -39,7 +39,7 @@ default configuration value in `globalCliArguments`.
 
 > **array**: `true` = `true`
 
-#### targets.check()
+#### targets.check
 
 > **check**: (`currentArg`) => `string` \| `true`
 
@@ -55,7 +55,7 @@ default configuration value in `globalCliArguments`.
 
 #### targets.choices
 
-> **choices**: ([`TargetProblem`](../../constant/type-aliases/TargetProblem.md) \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`)[] = `inputTargets`
+> **choices**: ([`TargetProblem`](../../constant/type-aliases/TargetProblem.md) \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `2026` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`)[] = `inputTargets`
 
 #### targets.demandThisOption
 
@@ -67,17 +67,17 @@ default configuration value in `globalCliArguments`.
 
 #### targets.coerce()
 
-> **coerce**(`targets`): (`"elections"` \| `"airports"` \| `"barker"` \| `"ghostmeme"` \| `"drive"` \| `"qoverflow"` \| `"blogpress"` \| `"inbdpa"` \| `"elections-irv"` \| `"elections-cpl"` \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`)[]
+> **coerce**(`targets`): (`"elections"` \| `"airports"` \| `"barker"` \| `"ghostmeme"` \| `"drive"` \| `"qoverflow"` \| `"blogpress"` \| `"inbdpa"` \| `"elections-irv"` \| `"elections-cpl"` \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `2026` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`)[]
 
 ##### Parameters
 
 ###### targets
 
-`Arrayable`\<[`TargetProblem`](../../constant/type-aliases/TargetProblem.md) \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`\>
+`Arrayable`\<[`TargetProblem`](../../constant/type-aliases/TargetProblem.md) \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `2026` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`\>
 
 ##### Returns
 
-(`"elections"` \| `"airports"` \| `"barker"` \| `"ghostmeme"` \| `"drive"` \| `"qoverflow"` \| `"blogpress"` \| `"inbdpa"` \| `"elections-irv"` \| `"elections-cpl"` \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`)[]
+(`"elections"` \| `"airports"` \| `"barker"` \| `"ghostmeme"` \| `"drive"` \| `"qoverflow"` \| `"blogpress"` \| `"inbdpa"` \| `"elections-irv"` \| `"elections-cpl"` \| `2019` \| `2020` \| `2021` \| `2022` \| `2023` \| `2024` \| `2025` \| `2026` \| `"mars"` \| `"neptune"` \| `"saturn"` \| `"pluto"` \| `"venus"` \| `"jupiter"` \| `"uranus"` \| `"ganymede"` \| `"callisto"` \| `"io"`)[]
 
 ## See
 

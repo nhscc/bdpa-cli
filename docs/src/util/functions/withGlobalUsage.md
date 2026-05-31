@@ -88,7 +88,7 @@ Defaults to: `Usage: $000\n\n${altDescription}` where `altDescription` is
 
 #### config?
 
-`string` | `WithUsageExtensionsConfig`
+`string` \| `WithUsageExtensionsConfig`
 
 #### moreConfig?
 

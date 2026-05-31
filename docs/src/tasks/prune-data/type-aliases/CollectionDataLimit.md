@@ -8,7 +8,7 @@
 
 > **CollectionDataLimit** = `object`
 
-Defined in: [src/tasks/prune-data.ts:30](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/tasks/prune-data.ts#L30)
+Defined in: [src/tasks/prune-data.ts:31](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/tasks/prune-data.ts#L31)
 
 An object describing the maximum number of bytes a collection's documents may
 occupy, along with strategies for deleting said documents when they grow too
@@ -16,11 +16,11 @@ numerous.
 
 ## Properties
 
-### deleteFn()?
+### deleteFn?
 
-> `optional` **deleteFn**: (`thresholdEntry`) => `Promisable`\<`number`\>
+> `optional` **deleteFn?**: (`thresholdEntry`) => `Promisable`\<`number`\>
 
-Defined in: [src/tasks/prune-data.ts:50](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/tasks/prune-data.ts#L50)
+Defined in: [src/tasks/prune-data.ts:51](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/tasks/prune-data.ts#L51)
 
 By default, documents are unceremoniously deleted from the collection
 without care for referential integrity. Use this function when deletions
@@ -43,7 +43,7 @@ library function.
 
 > **limit**: `object`
 
-Defined in: [src/tasks/prune-data.ts:34](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/tasks/prune-data.ts#L34)
+Defined in: [src/tasks/prune-data.ts:35](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/tasks/prune-data.ts#L35)
 
 Maximum number of bytes documents in this collection can use.
 
@@ -55,9 +55,9 @@ Maximum number of bytes documents in this collection can use.
 
 ### orderBy?
 
-> `optional` **orderBy**: `string`
+> `optional` **orderBy?**: `string`
 
-Defined in: [src/tasks/prune-data.ts:43](https://github.com/nhscc/bdpa-cli/blob/aab43dbd010a981851c0502d764dfd948966b4ad/src/tasks/prune-data.ts#L43)
+Defined in: [src/tasks/prune-data.ts:44](https://github.com/nhscc/bdpa-cli/blob/2e09fd4252f6e41b59aedfbc8db92acd3a6a9a39/src/tasks/prune-data.ts#L44)
 
 When deleting documents that violate `limit`, oldest documents are deleted
 first by default. `orderBy` is the name of the document property to sort by
