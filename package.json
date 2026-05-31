@@ -103,6 +103,9 @@
     "@-xun/mongo-test": "^3.0.4",
     "@-xun/symbiote": "^4.15.10"
   },
+  "peerDependencies": {
+    "listr2": ">=9"
+  },
   "engines": {
     "node": "^20.18.0 || >=22.12.0"
   },
