@@ -8,7 +8,7 @@
 
 > **withGlobalBuilder**\<`CustomCliArguments`\>(...`__namedParameters`): `WithBuilderExtensionsReturnType`\<`CustomCliArguments`\>
 
-Defined in: [src/util.ts:178](https://github.com/nhscc/bdpa-cli/blob/8823b9cdc0e4267643e0a553303936f796d68dac/src/util.ts#L178)
+Defined in: [src/util.ts:178](https://github.com/nhscc/bdpa-cli/blob/d76a4d6f2496d9d7ff05f6ca6f7775f062e8a812/src/util.ts#L178)
 
 A version of withStandardBuilder that expects `CustomCliArguments` to
 extend [GlobalCliArguments](../../configure/type-aliases/GlobalCliArguments.md) and implements any related global handler

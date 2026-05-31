@@ -8,4 +8,4 @@
 
 > **CustomCliArguments** = [`GlobalCliArguments`](../../../configure/type-aliases/GlobalCliArguments.md)
 
-Defined in: [src/commands/keys.ts:9](https://github.com/nhscc/bdpa-cli/blob/8823b9cdc0e4267643e0a553303936f796d68dac/src/commands/keys.ts#L9)
+Defined in: [src/commands/keys.ts:9](https://github.com/nhscc/bdpa-cli/blob/d76a4d6f2496d9d7ff05f6ca6f7775f062e8a812/src/commands/keys.ts#L9)
