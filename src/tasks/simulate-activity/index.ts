@@ -56,7 +56,8 @@ export default async function task(
   };
 
   const tenantId = `${target}-${taskType}`;
-  let backend, runSimulationSubtask: () => Promise<Listr>;
+  let backend;
+  let runSimulationSubtask: (() => Promise<Listr>) | undefined;
 
   await waitForListr2OutputReady(debug);
 
@@ -379,11 +380,15 @@ export default async function task(
     setSchemaConfig(backend.db.getSchemaConfig());
   });
 
+  if (!runSimulationSubtask) {
+    return;
+  }
+
   return listrTask.newListr(
     [
       {
         async task() {
-          return runSimulationSubtask();
+          return runSimulationSubtask?.();
         }
       },
       {
