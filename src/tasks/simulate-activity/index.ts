@@ -103,9 +103,9 @@ export default async function task(
         const maxFlightTimeToLiveDays = getConfig<number>(
           keys.maxFlightTimeToLiveDays,
           (value) =>
-            (Number.isInteger(value) && Number(value) > generateFlightsInAdvanceDays) ||
+            (Number.isInteger(value) && Number(value) > 0) ||
             ErrorMessage.UnexpectedValue(
-              ErrorMessage.expectations.GreaterThanInteger(generateFlightsInAdvanceDays),
+              ErrorMessage.expectations.PositiveInteger(),
               value
             )
         );
